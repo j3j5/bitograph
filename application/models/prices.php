@@ -93,7 +93,6 @@ class Prices {
 	}
 
 	private static function compress_prices($prices) {
-		var_dump('compreessssinngg!!!!');
 		// compress stats
 		$pack="";
 		foreach($prices as $timestamp => $stats_segments){
