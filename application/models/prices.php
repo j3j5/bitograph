@@ -89,7 +89,8 @@ class Prices {
 		}
 
 		$blob = self::compress_prices($prices);
-		return DB::table('bitcoin_price')->insert(array('market' => $market, 'prices' => $blob));
+// 		return DB::table('bitcoin_price')->insert(array('market' => $market, 'prices' => $blob));
+		return DB::query("REPLACE INTO `bitcoin_price` (`market`, `prices`) VALUES (?, ?)", array($market, $blob));
 	}
 
 	private static function compress_prices($prices) {
