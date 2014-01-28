@@ -32,7 +32,7 @@ class Home_Controller extends Base_Controller {
 
 	public function action_index() {
 
-		$prices = Prices::get_uncompressed_blob('bitonic');
+		$prices = Prices::get_uncompressed_blob('bitonic', TRUE);
 		return Response::json($prices);
 	}
 
