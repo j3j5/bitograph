@@ -32,7 +32,7 @@ class Home_Controller extends Base_Controller {
 
 	public function action_index()
 	{
-		return View::make('home.index');
+		return Response::json(array('test' => 100.8));
 	}
 
 }
