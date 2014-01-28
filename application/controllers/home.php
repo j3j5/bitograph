@@ -30,9 +30,10 @@ class Home_Controller extends Base_Controller {
 	|
 	*/
 
-	public function action_index()
-	{
-		return Response::json(array('test' => 100.8));
+	public function action_index() {
+
+		$prices = Prices::get_uncompressed_blob('bitonic');
+		return Response::json($prices);
 	}
 
 }
