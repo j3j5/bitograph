@@ -2,21 +2,9 @@
 
 class Prices {
 
-	public static function get_uncompressed_blob($market) {
-		if(empty($market) OR !is_string($market)) {
-			return FALSE;
-		}
-
-		$blob = self::get_blob( $market );
-		if(!$blob) {
-			return FALSE;
-		}
-		return self::uncompress_blob( $blob );
-	}
-
-
-	private static function get_blob($market = 0) {
-		if(empty($market) OR !is_numeric($market)) {
+	public static function get_uncompressed_blob($market = 'bitonic', $convert_to_float = FALSE) {
+		$supported_markets = Config::get('application.supported_markets');
+		if(!is_string($market) OR !in_array($market, $supported_markets)) {
 			return FALSE;
 		}
 
@@ -26,11 +14,25 @@ class Prices {
 		}
 		$blob = self::uncompress_blob( $blob );
 
+		if($convert_to_float) {
+			// Convert from long to float again
+			foreach($blob AS $ts => $prices) {
+				$blob[$ts]['buy'] = $prices['buy']/100;
+				$blob[$ts]['sell'] = $prices['sell']/100;
+			}
+		}
 		return $blob;
 	}
 
+	private static function get_blob($market) {
+		if(empty($market) OR !is_string($market)) {
+			return FALSE;
+		}
+		return DB::table('bitcoin_price')->where('market', '=', $market)->only('prices');
+	}
 
-	public static function uncompress_blob($blob) {
+
+	private static function uncompress_blob($blob) {
 		$bytes = unpack("V*", gzinflate($blob));
 
 		$prices = array();
@@ -40,10 +42,10 @@ class Prices {
 			if ($i%3 == 0) {
 				$k = $v;
 			} elseif($i%3 == 1) {
-				$prices[$k]['buy'] = $v/100;
+				$prices[$k]['buy'] = $v;
 // 			} elseif($i%3 == 2)
 			} else {
-				$prices[$k]['sell'] = $v/100;
+				$prices[$k]['sell'] = $v;
 			}
 			$i++;
 		}
@@ -58,7 +60,9 @@ class Prices {
 	 *
 	 */
 	public static function update_prices($market, $new_prices) {
-		if( !is_string($market) OR !in_array($market, Config::get('application.supported_markets')) ) {
+		$supported_markets = Config::get('application.supported_markets');
+
+		if( !is_string($market) OR !in_array($market, $supported_markets) ) {
 			return FALSE;
 		}
 
@@ -84,7 +88,9 @@ class Prices {
 
 
 	private static function set_compressed_blob($market, $prices) {
-		if( !is_string( $market ) === 0 || !in_array($market, Config::get('application.supported_markets'))  || !is_array($prices)) {
+		$supported_markets = Config::get('application.supported_markets');
+
+		if( !is_string( $market ) === 0 || !in_array($market, $supported_markets)  || !is_array($prices)) {
 			return FALSE;
 		}
 
