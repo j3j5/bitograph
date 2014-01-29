@@ -62,8 +62,6 @@ class Home_Controller extends Base_Controller {
 									),
 				);
 
-		$response = Response::json($data);
-		$json = $response->content;
 		$view = View::make('home.index')->with('data', json_encode($data));
 		return $view;
 	}
