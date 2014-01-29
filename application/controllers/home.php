@@ -2,6 +2,14 @@
 
 class Home_Controller extends Base_Controller {
 
+	public function __construct() {
+		Asset::container('footer')->script('charts', 'js/charts.js');
+		Asset::container('footer')->script('d3', 'http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js');
+		Asset::container('footer')->script('moment', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js');
+		Asset::container('head')->script('jquery', 'http://code.jquery.com/jquery-2.1.0.min.js');
+
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| The Default Controller
@@ -33,7 +41,31 @@ class Home_Controller extends Base_Controller {
 	public function action_index() {
 
 		$prices = Prices::get_uncompressed_blob('bitonic', TRUE);
-		return Response::json($prices);
+		$data_buy = array();
+		$data_sell = array();
+		foreach($prices AS $ts=>$price) {
+			$data_buy[] = array('x' => $ts, 'y' => $price['buy']);
+			$data_sell[] = array('x' => $ts, 'y' => $price['sell']);
+		}
+
+		$data = array(	'type' => 'line',
+						'options' => array('dual_axis' => FALSE),
+						'series' => array(
+											array(	'key' => 'buy',
+													'color' => '#0000FF',
+													'values' => $data_buy
+											),
+											array(	'key'   => 'sell',
+													'color' => '#00FF00',
+													'values' => $data_sell
+											),
+									),
+				);
+
+		$response = Response::json($data);
+		$json = $response->content;
+		$view = View::make('home.index')->with('data', json_encode($data));
+		return $view;
 	}
 
 }
