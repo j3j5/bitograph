@@ -44,9 +44,11 @@ class Home_Controller extends Base_Controller {
 		$data_buy = array();
 		$data_sell = array();
 		foreach($prices AS $ts=>$price) {
-			$data_buy[] = array('x' => $ts, 'y' => $price['buy']);
-			$data_sell[] = array('x' => $ts, 'y' => $price['sell']);
+			$data_buy[] = array('x' => $ts * 1000, 'y' => $price['buy']);
+			$data_sell[] = array('x' => $ts * 1000, 'y' => $price['sell']);
 		}
+		$data_buy = array_reverse($data_buy);
+		$data_sell = array_reverse($data_sell);
 
 		$data = array(	'type' => 'line',
 						'options' => array('dual_axis' => FALSE),
