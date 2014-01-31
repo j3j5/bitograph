@@ -2,7 +2,6 @@
 <html>
 	<head>
 	{{ Asset::container('head')->styles() }}
-	{{ Asset::container('head')->scripts() }}
 		<title></title>
 	</head>
 
@@ -10,7 +9,7 @@
 
 	<div id="chart">
 		<svg></svg>
-		<div class="tooltip"></div>
+		<div class="chart-tooltip"></div>
 	</div>
 
 	</body>

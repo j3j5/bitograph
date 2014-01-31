@@ -3,11 +3,9 @@
 class Home_Controller extends Base_Controller {
 
 	public function __construct() {
+		Asset::container('header')->style('style', 'css/style.css');
+		Asset::container('footer')->script('libraries', 'js/libraries.js');
 		Asset::container('footer')->script('charts', 'js/charts.js');
-		Asset::container('footer')->script('d3', 'http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js');
-		Asset::container('footer')->script('moment', 'http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js');
-		Asset::container('head')->script('jquery', 'http://code.jquery.com/jquery-2.1.0.min.js');
-
 	}
 
 	/*
