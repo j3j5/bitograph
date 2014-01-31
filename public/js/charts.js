@@ -258,34 +258,32 @@ var TWCAdvancedChart = {
 
 	graphDrawData: function () {
 		var that = this;
+
 		// First draw areas
+		var areaGradient = this.svg.append("svg:defs")
+			.append("svg:linearGradient")
+			.attr("id", "areaGradient")
+			.attr("x1", "0%")
+			.attr("y1", "0%")
+			.attr("x2", "0%")
+			.attr("y2", "100%")
+			.attr("spreadMethod", "pad");
 
-		$.each(this.graphSeries, function (idx, serie) {
+		areaGradient.append("svg:stop")
+			.attr("offset", "0%")
+			.attr("stop-color", this.graphSeries[0].color)
+			.attr("stop-opacity", .18);
+		areaGradient.append("svg:stop")
+			.attr("offset", "100%")
+			.attr("stop-color", this.graphSeries[1].color)
+			.attr("stop-opacity", .10);
 
-			var areaGradient = that.svg.append("svg:defs")
-				.append("svg:linearGradient")
-				.attr("id", "areaGradient-" + idx)
-				.attr("x1", "0%")
-				.attr("y1", "0%")
-				.attr("x2", "0%")
-				.attr("y2", "100%")
-				.attr("spreadMethod", "pad");
-
-			areaGradient.append("svg:stop")
-				.attr("offset", "0%")
-				.attr("stop-color", serie.color)
-				.attr("stop-opacity", .25);
-			areaGradient.append("svg:stop")
-				.attr("offset", "100%")
-				.attr("stop-color", serie.color)
-				.attr("stop-opacity", 0);
-
-			that.container.append("svg:path")
-				.attr("fill", serie.color)
-				.style("fill", "url(#areaGradient-" + idx + ")")
-				.attr("transform", "translate(" + that.margin.left + "," + that.margin.top + ")")
-				.attr("d", serie.area(serie.values));
-		});
+		if (this.area) {
+			this.container.append("svg:path")
+				.style("fill", "url(#areaGradient)")
+				.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+				.attr("d", this.area.gen(that.area.values));
+		}
 
 		var dotStyle = this.dotStyle;
 		$.each(this.graphSeries, function (idx, serie) {
@@ -317,27 +315,11 @@ var TWCAdvancedChart = {
 		$.each(this.shownData, function (i, serie) {
 			$('<span>').css('color', serie.color).html('&#9679;').appendTo(metrics);
 			$('<span>').text(' ' + serie.key).appendTo(metrics);
-			metrics.append(' ' + serie.values[idx].y);
-
-			var metricDiff = null;
-			if (typeof serie.values[idx-1] != 'undefined') {
-				var diff = serie.values[idx].y - serie.values[idx-1].y;
-				var diffClass = 'diff';
-				if (diff > 0) {
-					diff = '+' + diff;
-					diffClass += ' up';
-				}
-				else if (diff < 0) {
-					diffClass += ' down';
-				}
-				metricDiff = $('<div>').append(' (')
-					.append($('<span>').attr('class', diffClass).text(diff))
-					.append(')');
-
-				$('<span>').html(metricDiff.html()).appendTo(metrics);
-			}
-			metrics.append('<br>');
+			metrics.append(' ' + numberFormat(serie.values[idx].y, 2))
+				.append('<br>');
 		});
+		var diff = this.shownData[0].values[idx].y - this.shownData[1].values[idx].y;
+		metrics.append('<span>diff:</span> ' + numberFormat(diff, 2));
 		return metrics;
 	},
 
@@ -365,10 +347,11 @@ var TWCAdvancedChart = {
 		}
 
 		var date = moment(this.shownData[0].values[idx].x);
-		var dateStr = {'day': date.format('ddd'), 'date': date.format('MMM D'), 'year': date.format('YYYY')};
+		var dateStr = {'day': date.format('ddd'), 'date': date.format('MMM D'), 'year': date.format('YYYY'), 't': date.format('HH:mm')};
 		date = $('<div>').attr('class', 'date')
-			.text(dateStr.day + ', ' + dateStr.date + ' ')
-			.append($('<span>').text(dateStr.year));
+			.html('<b>' + dateStr.t + '</b>')
+			.append(', ' + dateStr.day + ', ' + dateStr.date + ' ')
+			.append($('<span>').text(dateStr.year))
 		var metrics = this.getTooltipMetrics(idx);
 
 		this.tooltip.empty().append(date).append(metrics);
@@ -380,20 +363,8 @@ var TWCAdvancedChart = {
 		var values = this.shownData[0].values;
 		var numPoints = values.length; // at least we have one data serie // TODO: change to this.numPoints
 
-		var timeFormat = '';
-		var xTickWidth = 1;
-		if (numPoints <= 7) {
-			timeFormat = '%a';
-			xTickWidth = 24;
-		}
-		else if (numPoints < 366) {
-			timeFormat = '%b %d';
-			xTickWidth = 35;
-		}
-		else {
-			timeFormat = '%m/%d/%y';
-			xTickWidth = 70;
-		}
+		var timeFormat = '%m/%d %H:%M';
+		var xTickWidth = 70;
 
 		var ticksNum = Math.floor(this.boxSize.width / xTickWidth);
 
@@ -456,22 +427,33 @@ var TWCAdvancedChart = {
 				.scale(graphSeries[idx].y)
 				.orient(yAxisOrient)
 				.tickValues([seriesMin, middle, seriesMax])
-				.tickFormat(d3.format('s'));
+				.tickFormat(function(d){ return numberFormat(d, 2); });
 
 			graphSeries[idx].line = d3.svg.line()
 				.x(function(d, i) {
 					return graphSeries[idx].x(d.x); })
-				.y(function(d) {
-					return graphSeries[idx].y(d.y); });
-
-			graphSeries[idx].area = d3.svg.area()
-				.x(function(d) { return graphSeries[idx].x(d.x); })
-				.y0(that.height)
-				.y1(function(d) { return graphSeries[idx].y(d.y) ; });
+				.y(function(d) { return graphSeries[idx].y(d.y); })
+				.interpolate('monotone');
 
 			graphSeries[idx].x.domain(d3.extent(serie.values, function(d) { return d.x; }));
 			graphSeries[idx].y.domain([seriesMin, seriesMax]);
 		});
+
+		this.area = {};
+
+		this.area.values = [];
+		for ( var i = 0 ; i < this.numPoints ; i++ ) {
+			this.area.values.push({
+				x:  this.shownData[0].values[i].x,
+				y0: this.shownData[0].values[i].y,
+				y1: this.shownData[1].values[i].y });
+		}
+
+		this.area.gen = d3.svg.area()
+			.x(function(d) { return graphSeries[0].x(d.x); })
+			.y0(function(d) { return graphSeries[0].y(d.y0); })
+			.y1(function(d) { return graphSeries[0].y(d.y1); })
+			.interpolate('monotone');
 
 		var xAxisFormat = this.getAxisFormat();
 
@@ -490,7 +472,7 @@ var TWCAdvancedChart = {
 	buildLineGraph: function () {
 		var that = this;
 
-		this.margin = {top: 15, right: 20, bottom: 20, left: 20};
+		this.margin = {top: 15, right: 30, bottom: 20, left: 30};
 		this.width = this.boxSize.width - this.margin.left - this.margin.right;
 		this.height = this.boxSize.height - this.margin.top - this.margin.bottom;
 
@@ -613,14 +595,14 @@ var TWCAdvancedChart = {
 $(document).ready(function(){
 	var svgChart = TWCAdvancedChart;
 
-	var $chart = $('#chart');
+	var $chart = $('#chart').attr('class', 'chart');
 
 	svgChart.init({
 		chartType: view.chartData.type,
 		data: view.chartData.series,
 		parent: $chart,
-		boxSize: {'width': 700, 'height': 300},
-		tooltip: $chart.find('.tooltip'),
+		boxSize: {'width': $chart.width(), 'height': 300},
+		tooltip: $chart.find('.chart-tooltip'),
 		chartOptions: view.chartData.options
 	});
 });
