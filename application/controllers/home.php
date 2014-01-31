@@ -3,7 +3,7 @@
 class Home_Controller extends Base_Controller {
 
 	public function __construct() {
-		Asset::container('header')->style('style', 'css/style.css');
+		Asset::container('head')->style('style', 'css/style.css');
 		Asset::container('footer')->script('libraries', 'js/libraries.js');
 		Asset::container('footer')->script('charts', 'js/charts.js');
 	}
@@ -52,11 +52,11 @@ class Home_Controller extends Base_Controller {
 						'options' => array('dual_axis' => FALSE),
 						'series' => array(
 											array(	'key' => 'buy',
-													'color' => '#0000FF',
+													'color' => '#2BBBD8',
 													'values' => $data_buy
 											),
 											array(	'key'   => 'sell',
-													'color' => '#00FF00',
+													'color' => '#F78D3F',
 													'values' => $data_sell
 											),
 									),
