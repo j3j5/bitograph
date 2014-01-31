@@ -1,0 +1,18 @@
+
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700);
+
+body {
+    font-family: 'Ubuntu Mono', sans-serif;
+}
+
+.chart{position:relative}
+.chart .chart-tooltip{position:absolute;top:0;display:none;background-color:#fff;border:0;padding:5px 10px;-webkit-border-radius:2px;-moz-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px;-webkit-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-moz-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-ms-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-o-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent}
+.chart .chart-tooltip .date{font-size:14px}
+.chart .chart-tooltip .date span{font-size:11px;color:#808080}
+.chart .chart-tooltip .metric{font-weight:700;font-size:14px}
+.chart .chart-tooltip .metric span{font-weight:normal;font-size:10px;color:#808080}
+.chart .chart-tooltip .metric .up{font-weight:700;color:#97d453}
+.chart .chart-tooltip .metric .down{font-weight:700;color:#d24}
+
+.chart g .xAxis{font-size:10px}
+.chart g .yAxis{font-size:14px}
