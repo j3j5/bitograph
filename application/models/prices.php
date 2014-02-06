@@ -100,13 +100,12 @@ class Prices {
 	}
 
 	private static function compress_prices($prices) {
-		// compress stats
 		$pack="";
-		foreach($prices as $timestamp => $stats_segments){
-			if(!isset($stats_segments['buy'], $stats_segments['sell'])){
+		foreach($prices as $timestamp => $price_segments){
+			if(!isset($price_segments['buy'], $price_segments['sell'])){
 				continue;
 			}
-			$pack.= pack("V*", $timestamp, $stats_segments['buy'], $stats_segments['sell']);
+			$pack.= pack("V*", $timestamp, $price_segments['buy'], $price_segments['sell']);
 		}
 		return gzdeflate($pack);
 	}
