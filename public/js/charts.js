@@ -29,6 +29,9 @@ var TWCAdvancedChart = {
 
 		this.chartType = options.chartType;
 
+		this.baseFrequency = 5; // 5 min
+		this.chartOptions.frequency = 120; // 2 hr
+
 		this.cachedData = options.data;
 		this.shownDataDeepCopy();
 
@@ -47,6 +50,10 @@ var TWCAdvancedChart = {
 		this.dotStyle = this.defaultDotStyle();
 
 		this.chartOptions = options.chartOptions;
+
+		this.chartOptions.events = {};
+
+
 
 		this.build();
 	},
@@ -569,6 +576,7 @@ var TWCAdvancedChart = {
 
 	shownDataDeepCopy: function () {
 		this.shownData = $.extend(true, [], this.cachedData); // Deep copy by value
+		this.changeDataFrequency();
 	},
 
 	defaultDotStyle: function () {
@@ -590,10 +598,105 @@ var TWCAdvancedChart = {
 		}
 	},
 
+	changeDataFrequency: function () {
+
+		var size = Math.floor(this.chartOptions.frequency / this.baseFrequency);
+
+		if ( size <= 1 ) {
+			return;
+		}
+
+		var newValues = [];
+		var numSeries = this.shownData.length;
+		var len = this.shownData[0].values.length;
+
+		for ( var i = 0 ; i < numSeries ; i++ ) {
+			newValues.push([]);
+		}
+
+		for ( var i = (len - 1) % size ; i < len - size ; i = i + size ) {
+			for ( var serie = 0 ; serie < numSeries ; serie++ ) {
+				newValues[serie].push({
+					x: this.shownData[serie].values[i+size].x,
+					//y: d3.mean(this.shownData[serie].values.slice(i,i+size), function (d) { return d.y; })
+					y: this.shownData[serie].values[i+size].y
+				});
+			}
+		}
+
+		for ( var i = 0 ; i < numSeries ; i++ ) {
+			newValues.push([]);
+			this.shownData[i].values = newValues[i];
+		}
+	},
+
+	changeChartFrequency: function (freq) {
+		this.chartOptions.frequency = freq;
+		this.shownDataDeepCopy();
+		this.emptyAndBuild();
+	},
+
 }
 
+var BitoConverter = {
+	$el: null,
+	$input: null,
+	$values: {buy: null, sell: null},
+	$date: null,
+	values: null,
+	timeout: {keyup: null},
+
+	init: function (element, values) {
+		this.$el = element;
+		this.$date = this.$el.find('h3 span');
+		this.$input = this.$el.find('[name=base]');
+
+		this.values = values;
+
+		var refdate = moment(this.values.datetime);
+		this.$date.html(refdate.format('ddd, MMM D, <b>HH:mm</b>'));
+
+		this.updateValues();
+
+		this.$input.on('keyup', $.proxy(this.inputKeyup, this));
+		this.$input.on('click', $.proxy(this.inputFocus, this));
+		this.$input.on('blur', $.proxy(this.inputBlur, this));
+	},
+
+	updateValues: function () {
+		var base = +this.$input.val();
+
+		if ( base == 0 || isNaN(base) ) {
+			base = 1;
+		}
+
+		this.$el.find('.values .buy').text( numberFormat( base * this.values.buy, 2 ) );
+		this.$el.find('.values .sell').text( numberFormat( base * this.values.sell, 2 ) );
+	},
+
+	inputKeyup: function () {
+		var that = this;
+		window.clearTimeout(this.timeout.keyup);
+		this.timeout.keyup = setTimeout(function () {
+			that.updateValues();
+		}, 350);
+	},
+
+	inputFocus: function () {
+		this.$input.select();
+	},
+
+	inputBlur: function () {
+		if (this.$input.val()) {
+			this.$input.val(numberFormat(this.$input.val(), 7));
+		}
+	},
+}
+
+var svgChart = null;
+
 $(document).ready(function(){
-	var svgChart = TWCAdvancedChart;
+	svgChart = TWCAdvancedChart;
 
 	var $chart = $('#chart').attr('class', 'chart');
 
@@ -605,6 +708,20 @@ $(document).ready(function(){
 		tooltip: $chart.find('.chart-tooltip'),
 		chartOptions: view.chartData.options
 	});
+
+	var len = view.chartData.series[0].values.length;
+	var lastValue = {
+		datetime: view.chartData.series[0].values[len-1].x,
+		buy: view.chartData.series[0].values[len-1].y,
+		sell: view.chartData.series[1].values[len-1].y,
+	};
+	BitoConverter.init($('#converter'), lastValue);
+
+	var freqs = [['5 min', 5], ['10 min', 10], ['30 min', 30], ['1 hr', 60], ['2 hr', 120], ['6 hr', 360],
+		['12 hr', 720], ['1 day', 1440], ['2 day', 2880]];
+	$.each(freqs, function (idx, freq) {
+		$('<button>').attr('class', 'btn btn-info btn-xs').text(freq[0])
+			.on('click', function () { svgChart.changeChartFrequency(freq[1]) })
+			.appendTo($("#frequencies"));
+	});
 });
-
-

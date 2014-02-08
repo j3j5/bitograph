@@ -5,8 +5,10 @@ body {
     font-family: 'Ubuntu Mono', sans-serif;
 }
 
+#chart-box {padding-bottom: 20px; box-shadow: 0px 4px 8px 0px #e0e0e0;}
+
 .chart{position:relative}
-.chart .chart-tooltip{position:absolute;top:0;display:none;background-color:#fff;border:0;padding:5px 10px;-webkit-border-radius:2px;-moz-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px;-webkit-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-moz-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-ms-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-o-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent}
+.chart .chart-tooltip{position:absolute;top:0;display:none;background-color:rgba(255,255,255,.95);border:2px solid #FFFFF;padding:5px 10px;-webkit-border-radius:2px;-moz-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px;-webkit-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-moz-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-ms-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-o-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent}
 .chart .chart-tooltip .date{font-size:14px}
 .chart .chart-tooltip .date span{font-size:11px;color:#808080}
 .chart .chart-tooltip .metric{font-weight:700;font-size:14px}
@@ -16,3 +18,10 @@ body {
 
 .chart g .xAxis{font-size:10px}
 .chart g .yAxis{font-size:14px}
+
+#converter h3 { color: #333333; }
+#converter .values { margin: 20px 0px 8px 0px; }
+#converter .values .value { display: inline-block; width: 48%; font-size: 26px; text-align: right; font-weight: 700; }
+#converter .values .value.buy { border-bottom: 2px solid #2BBBD8; }
+#converter .values .value.sell { border-bottom: 2px solid #F78D3F; }
+#converter .info { font-size: 12px; color: #666666; text-align: right; }
