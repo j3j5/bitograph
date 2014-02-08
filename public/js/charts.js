@@ -2,7 +2,7 @@
 var TWCAdvancedChart = {
 
 	chartType: null,
-	cachedData: null,
+	cachedData: [],
 	shownData: null,
 
 	container: null,
@@ -28,11 +28,12 @@ var TWCAdvancedChart = {
 	init: function (options) {
 
 		this.chartType = options.chartType;
+		this.chartOptions = options.chartOptions;
 
 		this.baseFrequency = 5; // 5 min
 		this.chartOptions.frequency = 120; // 2 hr
 
-		this.cachedData = options.data;
+		this.parseData(options.data);
 		this.shownDataDeepCopy();
 
 		this.container = d3.select(options.parent[0]).select('svg'); // TODO: pass an svg element
@@ -49,13 +50,29 @@ var TWCAdvancedChart = {
 
 		this.dotStyle = this.defaultDotStyle();
 
-		this.chartOptions = options.chartOptions;
-
 		this.chartOptions.events = {};
 
-
-
 		this.build();
+	},
+
+	parseData: function (d) {
+		var seriesLen = d.metrics.length;
+		var dataLen = d.values.length;
+
+		for ( var i = 0 ; i < seriesLen ; i++ ) {
+			this.cachedData.push({
+				key: d.metrics[i],
+				color: this.chartOptions.colors[i],
+				values: []
+			});
+		}
+
+		for ( var i = 0 ; i < dataLen ; i++ ) {
+			var item = d.values[i];
+			for ( var j = 0 ; j < seriesLen ; j++ ) {
+				this.cachedData[j].values.push({x: item[0], y: item[1][j]});
+			}
+		}
 	},
 
 	setInitialSize: function () {
@@ -726,18 +743,18 @@ $(document).ready(function(){
 
 	svgChart.init({
 		chartType: view.chartData.type,
-		data: view.chartData.series,
+		data: view.chartData.data,
 		parent: $chart,
 		boxSize: {'width': $chart.width(), 'height': 300},
 		tooltip: $chart.find('.chart-tooltip'),
 		chartOptions: view.chartData.options
 	});
 
-	var len = view.chartData.series[0].values.length;
+	var len = view.chartData.data.values.length;
 	var lastValue = {
-		datetime: view.chartData.series[0].values[len-1].x,
-		buy: view.chartData.series[0].values[len-1].y,
-		sell: view.chartData.series[1].values[len-1].y,
+		datetime: view.chartData.data.values[len-1][0],
+		buy: view.chartData.data.values[len-1][1][0],
+		sell: view.chartData.data.values[len-1][1][1],
 	};
 	BitoConverter.init($('#converter'), lastValue);
 
