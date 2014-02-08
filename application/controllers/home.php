@@ -39,27 +39,21 @@ class Home_Controller extends Base_Controller {
 	public function action_index() {
 
 		$prices = Prices::get_uncompressed_blob('bitonic', TRUE);
-		$data_buy = array();
-		$data_sell = array();
+		$data_prices = array();
 		foreach($prices AS $ts=>$price) {
-			$data_buy[] = array('x' => $ts * 1000, 'y' => $price['buy']);
-			$data_sell[] = array('x' => $ts * 1000, 'y' => $price['sell']);
+			$data_prices[] = array($ts * 1000, array($price['buy'], $price['sell']));
 		}
-		$data_buy = array_reverse($data_buy);
-		$data_sell = array_reverse($data_sell);
+		$data_prices = array_reverse($data_prices);
 
 		$data = array(	'type' => 'line',
-						'options' => array('dual_axis' => FALSE),
-						'series' => array(
-											array(	'key' => 'buy',
-													'color' => '#2BBBD8',
-													'values' => $data_buy
-											),
-											array(	'key'   => 'sell',
-													'color' => '#F78D3F',
-													'values' => $data_sell
-											),
-									),
+						'options' => array(
+							'dual_axis' => FALSE,
+							'colors' => array('#2BBBD8', '#F78D3F')
+						),
+						'data' => array(
+							'metrics' => array('buy', 'sell'),
+							'values' => $data_prices
+						),
 				);
 
 		$view = View::make('home.index')->with('data', json_encode($data));
