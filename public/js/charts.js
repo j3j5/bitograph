@@ -651,6 +651,11 @@ var BitoConverter = {
 		this.$date = this.$el.find('h3 span');
 		this.$input = this.$el.find('[name=base]');
 
+		var cachedValue = this.getCachedValue();
+		if (cachedValue) {
+			this.$input.val(cachedValue);
+		}
+
 		this.values = values;
 
 		var refdate = moment(this.values.datetime);
@@ -687,8 +692,27 @@ var BitoConverter = {
 	},
 
 	inputBlur: function () {
+		var value = null;
 		if (this.$input.val()) {
-			this.$input.val(numberFormat(this.$input.val(), 7));
+			value = numberFormat(this.$input.val(), 7);
+			this.$input.val(value);
+		}
+		this.setCachedValue(value);
+	},
+
+	getCachedValue: function () {
+		var value = null;
+		if (localStorage) {
+			value = localStorage.getItem('converter-value');
+		}
+		return value;
+	},
+
+	setCachedValue: function (val) {
+		if (localStorage) {
+			(val)
+				? localStorage.setItem('converter-value', val)
+				: localStorage.removeItem('converter-value');
 		}
 	},
 }
@@ -720,7 +744,7 @@ $(document).ready(function(){
 	var freqs = [['5 min', 5], ['10 min', 10], ['30 min', 30], ['1 hr', 60], ['2 hr', 120], ['6 hr', 360],
 		['12 hr', 720], ['1 day', 1440], ['2 day', 2880]];
 	$.each(freqs, function (idx, freq) {
-		$('<button>').attr('class', 'btn btn-info btn-xs').text(freq[0])
+		$('<button>').attr('class', 'btn btn-xs').text(freq[0])
 			.on('click', function () { svgChart.changeChartFrequency(freq[1]) })
 			.appendTo($("#frequencies"));
 	});
