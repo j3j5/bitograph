@@ -39,7 +39,7 @@ abstract class Update {
 			if(!$result) {
 				echo 'Something failed when updating.' . PHP_EOL;
 			} else {
-				echo 'Price uptaded for ' . $this->market . '. Buy: ' . $this->new_prices['euros'] . '€/฿; Sell: ' . $this->new_prices['euros'] . '€/฿;' . PHP_EOL;
+				echo 'Price uptaded for ' . $this->market . '. Buy: ' . $this->new_prices['buy'] . '€/฿; Sell: ' . $this->new_prices['sell'] . '€/฿;' . PHP_EOL;
 			}
 		} else {
 			var_dump($this->new_prices);

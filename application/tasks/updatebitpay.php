@@ -15,7 +15,7 @@ class Updatebitpay_Task extends Update{
 
 	protected function process_prices($json_sell1, $json_sell2) {
 		// On Bitpay you can just sell bitcoins
-		$sell = json_decode($json_buy, TRUE);
+		$sell = json_decode($json_sell1, TRUE);
 		// EUR rate is on the second position on the array
 		///TODO: Search for the 'EUR' code and retrieve always
 		if(!isset($sell[1]['code']) OR $sell[1]['code'] !== 'EUR') {

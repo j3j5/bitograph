@@ -24,6 +24,29 @@ class Prices {
 		return $blob;
 	}
 
+	public static function get_price_by_range ($start = NULL, $end = NULL) {
+
+		$prices = self::get_uncompressed_blob('bitonic', TRUE);
+
+		if (is_null($start) || is_null($end)) {
+			return $prices;
+		}
+
+		$start_ts = strtotime($start);
+		$end_ts   = strtotime($end);
+
+		$range_prices = array();
+		foreach ($prices AS $ts => $price) {
+			if ( $ts >= $start_ts && $ts <= $end_ts) {
+				$range_prices[$ts] = $price;
+			}
+		}
+
+		unset($prices);
+
+		return $range_prices;
+	}
+
 	private static function get_blob($market) {
 		if(empty($market) OR !is_string($market)) {
 			return FALSE;
