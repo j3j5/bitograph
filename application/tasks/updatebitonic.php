@@ -1,31 +1,30 @@
 <?php
 
-class updatebitonic_Task {
+class updatebitonic_Task extends Update {
+
+	public function __construct() {
+		$this->url_buy = "https://bitonic.nl/json/?part=rate_convert&check=btc&btc=1";
+		$this->url_sell = "https://bitonic.nl/json/sell?part=offer&check=btc&btc=1";
+		$this->market = 'bitonic';
+	}
+
 
 	public function run($arguments) {
+		parent::run_update();
+	}
 
-		$curl = New Curl;
-		$curl->option('USERAGENT', 'Googlebot/2.1 (+http://www.googlebot.com/bot.html)');
-		$json_buy = $curl->simple_get('https://bitonic.nl/json/?part=rate_convert&check=btc&btc=1');
-		$json_sell = $curl->simple_get('https://bitonic.nl/json/sell?part=offer&check=btc&btc=1');
-
+	protected function process_prices($json_buy, $json_sell){
 		$buy = json_decode($json_buy, TRUE);
 		$sell = json_decode($json_sell, TRUE);
-
 		if(!isset($buy['euros'], $sell['euros'])) {
-			echo 'Not a proper json for buy/sell: ' . PHP_EOL;
-			var_dump($buy);
-			var_dump($sell);
-			exit;
+			if(!isset($buy['euros'], $sell['euros'])) {
+				echo 'Not a proper json for buy/sell: ' . PHP_EOL;
+				var_dump($buy);
+				var_dump($sell);
+				exit;
+			}
 		}
-
-		$new_prices = array('timestamp' => time(), 'buy' => $buy['euros'], 'sell' => $sell['euros']);
-
-		$result = Prices::update_prices('bitonic', $new_prices);
-		if(!$result) {
-			echo 'Something failed when updating.' . PHP_EOL;
-		} else {
-			echo 'Price uptaded. Buy: ' . $buy['euros'] . '€/฿; Sell: ' . $sell['euros'] . '€/฿;' . PHP_EOL;
-		}
+		$this->new_prices = array('timestamp' => time(), 'buy' => $buy['euros'], 'sell' => $sell['euros']);
 	}
+
 }
