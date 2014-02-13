@@ -79,8 +79,8 @@ class Prices {
 		$prices = self::get_uncompressed_blob($market);
 
 		// Convert prices to cents so we can store it on a long
-		$prices[$new_prices['timestamp']]['buy'] = $new_prices['buy'] * 100;
-		$prices[$new_prices['timestamp']]['sell'] = $new_prices['sell'] * 100;
+		$prices[$new_prices['timestamp']]['buy'] = (int)$new_prices['buy'] * 100;
+		$prices[$new_prices['timestamp']]['sell'] = (int)$new_prices['sell'] * 100;
 		krsort($prices);
 
 		return self::set_compressed_blob($market, $prices);
