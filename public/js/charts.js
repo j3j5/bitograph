@@ -692,8 +692,11 @@ var BitoConverter = {
 			base = 1;
 		}
 
-		this.$el.find('.values .buy').text( numberFormat( base * this.values.buy, 2 ) );
-		this.$el.find('.values .sell').text( numberFormat( base * this.values.sell, 2 ) );
+		this.$el.find('.unity-values .buy span.price').text( numberFormat( this.values.buy, 2 ) );
+		this.$el.find('.unity-values .sell span.price').text( numberFormat( this.values.sell, 2 ) );
+		this.$el.find('.unity-values .diff span.price').text( numberFormat( this.values.buy - this.values.sell, 2 ) );
+		this.$el.find('.values .buy span.price').text( numberFormat( base * this.values.buy, 2 ) );
+		this.$el.find('.values .sell span.price').text( numberFormat( base * this.values.sell, 2 ) );
 	},
 
 	inputKeyup: function () {

@@ -35,16 +35,24 @@
 		</div>
 
 		<div class="container">
-			<div class="col-sm-6 col-md-4">
+			<div class="col-sm-6 col-md-6">
 				<div id="converter">
 					<h3>On <span></span></h3>
-					<div class="input-group">
-						<span class="input-group-addon">฿</span>
-						<input class="form-control" name="base" placeholder="1.0000">
+					<div class="unity-values row">
+						<div class="value ref col-xs-2"><span class="cur">฿</span> <span class="price">1</span></div>
+						<div class="value buy col-xs-4"><span class="cur">&euro;</span> <span class="price"></span></div>
+						<div class="value sell col-xs-4"><span class="cur">&euro;</span> <span class="price"></span></div>
+						<div class="value diff col-xs-2"> <span class="price"></span></div>
 					</div>
-					<div class="values">
-						<div class="value buy"></div>
-						<div class="value sell"></div>
+					<div class="row">
+						<div class="input-group">
+							<span class="input-group-addon">฿</span>
+							<input class="form-control" name="base" placeholder="1.0000">
+						</div>
+					</div>
+					<div class="values row">
+						<div class="value buy col-xs-6"><span class="cur">&euro;</span> <span class="price"></span></div>
+						<div class="value sell col-xs-6"><span class="cur">&euro;</span> <span class="price"></span></div>
 					</div>
 				</div>
 			</div>
