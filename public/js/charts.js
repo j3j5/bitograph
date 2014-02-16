@@ -55,10 +55,18 @@ var TWCAdvancedChart = {
 		this.build();
 	},
 
+	update: function (options) {
+		this.chartType = options.chartType;
+		this.parseData(options.data);
+		this.shownDataDeepCopy();
+		this.emptyAndBuild();
+	},
+
 	parseData: function (d) {
 		var seriesLen = d.metrics.length;
 		var dataLen = d.values.length;
 
+		this.cachedData = [];
 		for ( var i = 0 ; i < seriesLen ; i++ ) {
 			this.cachedData.push({
 				key: d.metrics[i],
@@ -283,26 +291,26 @@ var TWCAdvancedChart = {
 	graphDrawData: function () {
 		var that = this;
 
-		// First draw areas
-		var areaGradient = this.svg.append("svg:defs")
-			.append("svg:linearGradient")
-			.attr("id", "areaGradient")
-			.attr("x1", "0%")
-			.attr("y1", "0%")
-			.attr("x2", "0%")
-			.attr("y2", "100%")
-			.attr("spreadMethod", "pad");
-
-		areaGradient.append("svg:stop")
-			.attr("offset", "0%")
-			.attr("stop-color", this.graphSeries[0].color)
-			.attr("stop-opacity", .18);
-		areaGradient.append("svg:stop")
-			.attr("offset", "100%")
-			.attr("stop-color", this.graphSeries[1].color)
-			.attr("stop-opacity", .10);
-
 		if (this.area) {
+			// First draw areas
+			var areaGradient = this.svg.append("svg:defs")
+				.append("svg:linearGradient")
+				.attr("id", "areaGradient")
+				.attr("x1", "0%")
+				.attr("y1", "0%")
+				.attr("x2", "0%")
+				.attr("y2", "100%")
+				.attr("spreadMethod", "pad");
+
+			areaGradient.append("svg:stop")
+				.attr("offset", "0%")
+				.attr("stop-color", this.graphSeries[0].color)
+				.attr("stop-opacity", .18);
+			areaGradient.append("svg:stop")
+				.attr("offset", "100%")
+				.attr("stop-color", this.graphSeries[1].color)
+				.attr("stop-opacity", .10);
+
 			this.container.append("svg:path")
 				.style("fill", "url(#areaGradient)")
 				.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
@@ -342,8 +350,12 @@ var TWCAdvancedChart = {
 			metrics.append(' ' + numberFormat(serie.values[idx].y, 2))
 				.append('<br>');
 		});
-		var diff = this.shownData[0].values[idx].y - this.shownData[1].values[idx].y;
-		metrics.append('<span>diff:</span> ' + numberFormat(diff, 2));
+
+		if (this.shownData.length == 2) {
+			var diff = this.shownData[0].values[idx].y - this.shownData[1].values[idx].y;
+			metrics.append('<span>diff:</span> ' + numberFormat(diff, 2));
+		}
+
 		return metrics;
 	},
 
@@ -463,21 +475,25 @@ var TWCAdvancedChart = {
 			graphSeries[idx].y.domain([seriesMin, seriesMax]);
 		});
 
-		this.area = {};
+		this.area = null;
 
-		this.area.values = [];
-		for ( var i = 0 ; i < this.numPoints ; i++ ) {
-			this.area.values.push({
-				x:  this.shownData[0].values[i].x,
-				y0: this.shownData[0].values[i].y,
-				y1: this.shownData[1].values[i].y });
+		if (this.shownData.length == 2) {
+			this.area = {};
+
+			this.area.values = [];
+			for ( var i = 0 ; i < this.numPoints ; i++ ) {
+				this.area.values.push({
+					x:  this.shownData[0].values[i].x,
+					y0: this.shownData[0].values[i].y,
+					y1: this.shownData[1].values[i].y });
+			}
+
+			this.area.gen = d3.svg.area()
+				.x(function(d) { return graphSeries[0].x(d.x); })
+				.y0(function(d) { return graphSeries[0].y(d.y0); })
+				.y1(function(d) { return graphSeries[0].y(d.y1); })
+				.interpolate('monotone');
 		}
-
-		this.area.gen = d3.svg.area()
-			.x(function(d) { return graphSeries[0].x(d.x); })
-			.y0(function(d) { return graphSeries[0].y(d.y0); })
-			.y1(function(d) { return graphSeries[0].y(d.y1); })
-			.interpolate('monotone');
 
 		var xAxisFormat = this.getAxisFormat();
 
@@ -739,6 +755,29 @@ var BitoConverter = {
 
 var svgChart = null;
 
+var chart = {
+	getData: function () {
+		$.ajax({
+			type: 'POST',
+			url: 'http://dezwartepoet.nl/ajax/bitonic',
+			dataType: 'json',
+			data: {
+				'start-day': $('[name="start-day"]').val(),
+				'end-day': $('[name="end-day"]').val(),
+				'chart-market': $('[name="chart-market"]').val(),
+			},
+			success: function (response) {
+				svgChart.update({
+					chartType: response.type,
+					data: response.data
+				});
+			}
+		});
+	}
+}
+
+var svgChart = null;
+
 $(document).ready(function(){
 	svgChart = TWCAdvancedChart;
 
@@ -767,5 +806,9 @@ $(document).ready(function(){
 		$('<button>').attr('class', 'btn btn-xs').text(freq[0])
 			.on('click', function () { svgChart.changeChartFrequency(freq[1]) })
 			.appendTo($("#frequencies"));
+	});
+
+	$('#update-chart').on('click', function () {
+		chart.getData();
 	});
 });

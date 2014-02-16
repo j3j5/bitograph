@@ -23,6 +23,21 @@
 
 	<section id="main">
 		<div id="chart-box">
+			<div class="container">
+				<input type="date" name="start-day"
+					class="input-sm"
+					value="{{ $chart_selector['start'] }}"
+					min="{{ $chart_selector['min'] }}" max="{{ $chart_selector['max'] }}">
+				<input type="date" name="end-day"
+					class="input-sm"
+					value="{{ $chart_selector['end'] }}"
+					min="{{ $chart_selector['min'] }}" max="{{ $chart_selector['max'] }}" >
+				<select name="chart-market" id="chart-market">
+					<option value="bitonic" selected="selected">Bitonic</option>
+					<option value="bitpay">Bitpay</option>
+				</select>
+				<button id="update-chart" class="btn">Go</button>
+			</div>
 			<div class="col-xs-12">
 				<div id="chart">
 					<svg></svg>

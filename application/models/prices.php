@@ -24,9 +24,9 @@ class Prices {
 		return $blob;
 	}
 
-	public static function get_price_by_range ($start = NULL, $end = NULL) {
+	public static function get_price_by_range ($start = NULL, $end = NULL, $market = 'bitonic') {
 
-		$prices = self::get_uncompressed_blob('bitonic', TRUE);
+		$prices = self::get_uncompressed_blob($market, TRUE);
 
 		if (is_null($start) || is_null($end)) {
 			return $prices;
@@ -102,8 +102,8 @@ class Prices {
 		$prices = self::get_uncompressed_blob($market);
 
 		// Convert prices to cents so we can store it on a long
-		$prices[$new_prices['timestamp']]['buy'] = (int)$new_prices['buy'] * 100;
-		$prices[$new_prices['timestamp']]['sell'] = (int)$new_prices['sell'] * 100;
+		$prices[$new_prices['timestamp']]['buy'] = $new_prices['buy'] * 100;
+		$prices[$new_prices['timestamp']]['sell'] = $new_prices['sell'] * 100;
 		krsort($prices);
 
 		return self::set_compressed_blob($market, $prices);
@@ -123,12 +123,13 @@ class Prices {
 	}
 
 	private static function compress_prices($prices) {
+		// compress stats
 		$pack="";
-		foreach($prices as $timestamp => $price_segments){
-			if(!isset($price_segments['buy'], $price_segments['sell'])){
+		foreach($prices as $timestamp => $stats_segments){
+			if(!isset($stats_segments['buy'], $stats_segments['sell'])){
 				continue;
 			}
-			$pack.= pack("V*", $timestamp, $price_segments['buy'], $price_segments['sell']);
+			$pack.= pack("V*", $timestamp, $stats_segments['buy'], $stats_segments['sell']);
 		}
 		return gzdeflate($pack);
 	}
