@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<?php echo Asset::container('head')->styles(); ?>
 	<title>Error 404 - Not Found</title>
 	<meta name="viewport" content="width=device-width">
 	<style type="text/css">
@@ -61,14 +62,6 @@
 		table { border-collapse: collapse; border-spacing: 0; }
 		td { vertical-align: top; }
 
-		body
-		{
-			font-family:'Droid Sans', sans-serif;
-			font-size:10pt;
-			color:#555;
-			line-height: 25px;
-		}
-
 		.wrapper
 		{
 			width:760px;
@@ -100,20 +93,19 @@
 	<div class="wrapper">
 		<div class="error-spacer"></div>
 		<div role="main" class="main">
-			<?php $messages = array('We need a map.', 'I think we\'re lost.', 'We took a wrong turn.'); ?>
+			<?php $messages = array('Do you need a map?', 'I think you\'re lost.', 'You took a wrong turn.'); ?>
 
 			<h1><?php echo $messages[mt_rand(0, 2)]; ?></h1>
 
 			<h2>Server Error: 404 (Not Found)</h2>
 
 			<hr>
+			<?php echo HTML::image('img/404/gandalf.gif', "Where are you going?", array('id' => 'gandalf', 'class' => 'center-block')); ?>
 
 			<h3>What does this mean?</h3>
 
 			<p>
-				We couldn't find the page you requested on our servers. We're really sorry
-				about that. It's our fault, not yours. We'll work hard to get this page
-				back online as soon as possible.
+				We just don't really know where you're trying to go. Who brought you here?
 			</p>
 
 			<p>
