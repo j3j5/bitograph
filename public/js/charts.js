@@ -759,7 +759,7 @@ var chart = {
 	getData: function () {
 		$.ajax({
 			type: 'POST',
-			url: 'http://dezwartepoet.nl/ajax/bitonic',
+			url: 'http://bitcoinprice.today/ajax/bitonic',
 			dataType: 'json',
 			data: {
 				'start-day': $('[name="start-day"]').val(),

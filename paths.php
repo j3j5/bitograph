@@ -24,7 +24,7 @@
 $environments = array(
 
 	'local' => array('http://bitonic.graph*'),
-	'live' => array('http://dezwartepoet.nl*'),
+	'live' => array('http://bitcoinprice.today*'),
 
 );
 
