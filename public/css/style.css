@@ -29,3 +29,6 @@ body {
 #converter .value.sell { border-bottom: 2px solid #F78D3F; }
 #converter span.cur { font-size: 20px; }
 #converter .info { font-size: 12px; color: #666666; text-align: right; }
+
+#donations .qr { margin: 10px 0 0; }
+#donations #qr-thumbnail { cursor: pointer; }

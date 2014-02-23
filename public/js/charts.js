@@ -365,7 +365,7 @@ var TWCAdvancedChart = {
 
 	placeTooltip: function (mouse) {
 		var xOffset = 22;
-		var top = mouse[1] - 12; // offset: -12
+		var top = mouse[1] + 8; // offset: 8
 		this.tooltip.css({'display': 'block', 'top': top + 'px'});
 		var width = this.boxSize.width;
 		if (mouse[0] > (width / 2)) {
@@ -810,5 +810,13 @@ $(document).ready(function(){
 
 	$('#update-chart').on('click', function () {
 		chart.getData();
+	});
+
+	$('#chart-market').on('change', function () {
+		chart.getData();
+	});
+
+	$('#qr-thumbnail').on('click', function () {
+		$('#qr-modal').modal('toggle')
 	});
 });

@@ -24,6 +24,12 @@
 	<section id="main">
 		<div id="chart-box">
 			<div class="container">
+				Market:
+				<select name="chart-market" id="chart-market">
+					<option value="bitonic" selected="selected">Bitonic</option>
+					<option value="bitpay">Bitpay</option>
+				</select>
+				Time:
 				<input type="date" name="start-day"
 					class="input-sm"
 					value="{{ $chart_selector['start'] }}"
@@ -32,10 +38,6 @@
 					class="input-sm"
 					value="{{ $chart_selector['end'] }}"
 					min="{{ $chart_selector['min'] }}" max="{{ $chart_selector['max'] }}" >
-				<select name="chart-market" id="chart-market">
-					<option value="bitonic" selected="selected">Bitonic</option>
-					<option value="bitpay">Bitpay</option>
-				</select>
 				<button id="update-chart" class="btn">Go</button>
 			</div>
 			<div class="col-xs-12">
@@ -45,7 +47,9 @@
 				</div>
 			</div>
 			<div class="container">
-				<div id="frequencies"></div>
+				<div id="frequencies">
+					<span>Frequency: </span>
+				</div>
 			</div>
 		</div>
 
@@ -71,9 +75,34 @@
 					</div>
 				</div>
 			</div>
+			<div id="donations" class="col-xs-5 col-xs-offset-1">
+				<h3>We accept donations: </h3>
+				<div>
+					<b>฿</b>
+					address
+					<kbd>1FVFeaRvFtCxyTy7KzYKRnM92syDJpVe8p</kbd>
+				</div>
+				<div class="qr">
+					<img id="qr-thumbnail" class="center-block" src="./img/donation/donation-qr-small.png">
+				</div>
+			</div>
 		</div>
 
 	</section>
+
+	<div id="qr-modal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Donation</h4>
+				</div>
+				<div class="modal-body">
+					<img class="img-responsive" src="./img/donation/donation-qr-big.png">
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 	</body>
 	<script>
