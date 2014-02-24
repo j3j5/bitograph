@@ -21,7 +21,12 @@ abstract class Update {
 			$this->curl = New Curl;
 		}
 
+		// Fix the problem when resolving hosts
+		$this->curl->option('IPRESOLVE', CURL_IPRESOLVE_V4);
+
+		// Make the call as the Google Bot (who wants to block Google?)
 		$this->curl->option('USERAGENT', $this->user_agent);
+
 		if(!empty($this->url_buy)) {
 			$json_buy = $this->curl->simple_get($this->url_buy);
 		}
