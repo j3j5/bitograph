@@ -3,8 +3,8 @@
 class updatebitonic_Task extends Update {
 
 	public function __construct() {
-		$this->url_buy = "https://bitonic.nl/json/?part=rate_convert&check=btc&btc=1";
-		$this->url_sell = "https://bitonic.nl/json/sell?part=offer&check=btc&btc=1";
+		$this->url_buy = "https://bitonic.nl/json/?part=rate_convert&check=btc&btc=1&method=ideal";
+		$this->url_sell = "https://bitonic.nl/json/sell?part=offer&check=btc&btc=1&method=ideal";
 		$this->market = 'bitonic';
 	}
 
