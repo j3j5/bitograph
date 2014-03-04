@@ -32,3 +32,31 @@ body {
 
 #donations .qr { margin: 10px 0 0; }
 #donations #qr-thumbnail { cursor: pointer; }
+
+ul.account-list { padding: 0px 32px 0px 0px; text-align: right; list-style: none; }
+ul.account-list input, ul.account-list button, ul.account-list select { width: 100%; }
+ul.account-list .input-date { height: 20px; }
+ul.account-list li { line-height: 28px; }
+ul.account-list li.purchase-row { color: #909090; }
+ul.account-list li.purchase-row:hover { color: #303030; }
+ul.account-list .col-xs-3 { padding-left: 5px; padding-right: 5px; }
+ul.account-list .remove-row { position: absolute; right: 6px; }
+ul.account-list .market-row { font-weight: 700; border-top: 1px dashed #808080; margin-top: 12px; }
+
+ul.account-list .remove-row a {
+height: 14px;
+width: 14px;
+background-color: #f0f0f0;
+color: #a0a0a0;
+line-height: 12px;
+display: inline-block;
+text-align: center;
+border-radius: 50% 50%;
+}
+
+ul.account-list .remove-row a:hover {
+    background-color: #808080;
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+}

@@ -3,12 +3,12 @@
 class Home_Controller extends Base_Controller {
 
 	public function __construct() {
-		Asset::container('head')->style('style', 'css/style.css');
-		Asset::container('footer')->script('libraries', 'js/libraries.js');
-		Asset::container('footer')->script('charts', 'js/charts.js');
 	}
 
 	public function action_index($market = 'bitonic') {
+		Asset::container('head')->style('style', 'css/style.css');
+		Asset::container('footer')->script('libraries', 'js/libraries.js');
+		Asset::container('footer')->script('charts', 'js/charts.js');
 
 		if(!in_array($market, Config::get('application.supported_markets'))) {
 // 			var_dump($market);
@@ -67,6 +67,16 @@ class Home_Controller extends Base_Controller {
 
 		$view = View::make('home.index')->with('data', json_encode($data));
 		$view->chart_selector = $chart_selector;
+		return $view;
+	}
+
+	public function action_angular () {
+
+		Asset::container('head')->style('style', 'css/style.css');
+		Asset::container('footer')->script('angular', '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.0rc3/angular.js');
+		Asset::container('footer')->script('charts', 'js/ang-app.js');
+
+		$view = View::make('home.angular');
 		return $view;
 	}
 
