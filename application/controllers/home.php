@@ -24,7 +24,7 @@ class Home_Controller extends Base_Controller {
 		);
 
 //		$prices = Prices::get_uncompressed_blob($market, TRUE);
-		$prices = Prices::get_price_by_range($chart_selector['start'], $chart_selector['end'] . ' 23:59:59', $market);
+		$prices = Prices::get_price_by_range($chart_selector['start'] . '00:00:00', $chart_selector['end'] . ' 23:59:59', $market);
 		$data_prices = array();
 
 		if ($market == 'bitonic') {
