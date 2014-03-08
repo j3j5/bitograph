@@ -1,6 +1,25 @@
 
 var accList = angular.module('AccountList', [])
-	.controller('AccountListController', function($scope, $filter) {
+.controller('MainChartController', function($scope, $element) {
+
+	$scope.chart = BCPTChart;
+
+	$scope.init = function () {
+
+		var $chart = $element[0].querySelectorAll('.chart')[0];
+
+		$scope.chart.init({
+			chartType: view.chartData.type,
+			data: view.chartData.data,
+			parent: $chart,
+			boxSize: {'width': $chart.offsetWidth, 'height': 300},
+			tooltip: $element[0].querySelectorAll('.chart-tooltip')[0], //$chart.find('.chart-tooltip'),
+			chartOptions: view.chartData.options
+		});
+	}
+
+})
+.controller('AccountListController', function($scope, $filter) {
 
 	$scope.purchases = [
 	];

@@ -15,6 +15,12 @@
 </header>
 
 <section id="main" ng-app="AccountList">
+	<div ng-controller="MainChartController" ng-init="init()">
+		<div class="chart">
+			<svg></svg>
+			<div class="chart-tooltip"></div>
+		</div>
+	</div>
 	<div class="container">
 		<div ng-controller="AccountListController" class="col-xs-12 col-sm-6">
 			<ul class="account-list">
@@ -74,7 +80,8 @@
 </body>
 <script>
 	var view = {
-		'HOST': '{{ URL::base() }}'
+		'HOST': '{{ URL::base() }}',
+		'chartData': {{ $data }}
 	};
 </script>
 {{ Asset::container('footer')->scripts() }}
