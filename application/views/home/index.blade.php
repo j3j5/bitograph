@@ -20,13 +20,21 @@
 		<div class="navbar-header">
 			<a href="/" class="navbar-brand">Bitochart</a>
 		</div>
-		<!-- nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+		<!--<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 			<ul class="nav navbar-nav">
 				<li>
+				<?php// if(!Auth::check()) { ?>
 					<a href="/login">Login</a>
+				<?php// } else { ?>
+					<a href="/logout">Log out</a>
+				<?php// } ?>
 				</li>
 			</ul>
-		</nav -->
+		</nav>-->
+		<!-- check for flash notification message -->
+		@if(Session::has('flash_notice'))
+			<div id="flash_notice">{{ Session::get('flash_notice') }}</div>
+		@endif
 	</header>
 
 	<section id="main">
