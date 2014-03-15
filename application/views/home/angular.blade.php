@@ -10,7 +10,9 @@
 
 <header class="navbar navbar-static-top" role="banner">
 	<div class="navbar-header">
-		<a href="/" class="navbar-brand">Bitochart</a>
+		<a href="/" class="navbar-brand">Bitcoin price TODAY!</a>
+	</div>
+	<div id="header-net" style="position: absolute; top: 0px; right: 0px; height: 70px; width: 750px;">
 	</div>
 </header>
 

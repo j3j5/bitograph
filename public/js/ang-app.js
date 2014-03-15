@@ -69,3 +69,25 @@ accList.config(function($interpolateProvider) {
 	$interpolateProvider.startSymbol('{%');
 	$interpolateProvider.endSymbol('%}');
 });
+
+//http://codepen.io/adamesque/pen/qHJsf
+var w = 500,
+	h = 100;
+
+var vertices = d3.range(80).map(function(d) {
+	return [Math.random() * w, Math.random() * h];
+});
+
+var delaunay = d3.geom.delaunay(vertices);
+
+var svg = d3.select("#header-net")
+	.append("svg")
+	.attr("preserveAspectRatio", "xMidYMid slice")
+	.attr("viewBox", [0, 0, w, h].join(' '))
+
+svg.append("g")
+	.selectAll("path")
+	.data(delaunay)
+	.enter().append("path")
+	.attr("class", function(d, i) { return "q" + (i % 9) + "-9"; })
+	.attr("d", function(d) { return "M" + d.join("L") + "Z"; });

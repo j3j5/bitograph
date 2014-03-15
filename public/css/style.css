@@ -3,12 +3,19 @@
 
 body {
     font-family: 'Ubuntu Mono', sans-serif;
+    background-color: #f6f6f6;
 }
+
+.container { background-color: #ffffff; border-radius: 4px; margin-top: 20px; }
+
+#header-net svg { background-color: #f6f6f6; width: 100%; height: 100%; }
+#header-net path { fill: none; stroke: #e0e0e0;/*#2BBBD8*/; stroke-width: 1px; }
+
 
 #chart-box {padding-bottom: 20px; margin-bottom: 20px; box-shadow: 0px 4px 8px 0px #e0e0e0;}
 
-.chart{position:relative}
-.chart .chart-tooltip{position:absolute;top:0;display:none;background-color:rgba(255,255,255,.95);border:2px solid #FFFFF;padding:5px 10px;-webkit-border-radius:2px;-moz-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px;-webkit-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-moz-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-ms-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-o-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent}
+.chart{position:relative; background-color: #ffffff;}
+.chart .chart-tooltip{position:absolute;top:0;display:none;background-color:rgba(255,255,255,.95);border:2px solid #FFFFFF;padding:5px 10px;-webkit-border-radius:2px;-moz-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px;-webkit-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-moz-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-ms-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;-o-box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent;box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 transparent}
 .chart .chart-tooltip .date{font-size:14px}
 .chart .chart-tooltip .date span{font-size:11px;color:#808080}
 .chart .chart-tooltip .metric{font-weight:700;font-size:14px}
