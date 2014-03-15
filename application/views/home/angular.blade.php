@@ -23,7 +23,7 @@
 			<div class="chart-tooltip"></div>
 		</div>
 	</div>
-	<div class="container">
+	<div class="container main-container">
 		<div ng-controller="AccountListController" class="col-xs-12 col-sm-6">
 			<ul class="account-list">
 				<li class="row">
