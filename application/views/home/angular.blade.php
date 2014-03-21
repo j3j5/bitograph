@@ -10,7 +10,9 @@
 
 <header class="navbar navbar-static-top" role="banner">
 	<div class="navbar-header">
-		<a href="/" class="navbar-brand">Bitcoin price TODAY!</a>
+		<a href="/" class="navbar-brand">
+			<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
+		</a>
 	</div>
 	<div id="header-net" style="position: absolute; top: 0px; right: 0px; height: 70px; width: 750px;">
 	</div>
@@ -24,56 +26,56 @@
 		</div>
 	</div>
 	<div class="container main-container">
-		<div ng-controller="AccountListController" class="col-xs-12 col-sm-6">
-			<ul class="account-list">
+		<div ng-controller="AccountListController" class="account-list col-xs-12 col-sm-6">
+			<h3 class="light-text">
+				Your transactions
+			</h3>
+			<ul>
 				<li class="row">
-					<div class="col-xs-3">Date</div>
-					<div class="col-xs-3">BTC</div>
-					<div class="col-xs-3">EUR</div>
-					<div class="col-xs-3">EUR/BTC</div>
+					<div class="col-date">Date</div>
+					<div class="col-btc">BTC</div>
+					<div class="col-currency">EUR</div>
+					<div class="col-rate">EUR/BTC</div>
 				</li>
 				<li class="row purchase-row" ng-repeat="purchase in purchases">
-					<div class="col-xs-3">{% purchase.date | date:'MMM dd, yyyy' %}</div>
-					<div class="col-xs-3">{% purchase.btc | number:8 %}</div>
-					<div class="col-xs-3">{% purchase.cur | number:2 %}</div>
-					<div class="col-xs-3">{% purchase.cur/purchase.btc | number:2 %}</div>
+					<div class="col-date light-text">{% purchase.date | date:'MMM dd, yyyy' %}</div>
+					<div class="col-btc ms-text">{% purchase.btc | number:8 %}</div>
+					<div class="col-currency ms-text">{% purchase.cur | number:2 %}</div>
+					<div class="col-rate ms-text">{% purchase.cur/purchase.btc | number:2 %}</div>
 					<div class="remove-row">
 						<a ng-click="purchases.splice($index, 1)">&times;</a>
 					</div>
 				</li>
 				<li class="row input-row">
-					<div class="col-xs-3">
+					<div class="col-date">
 						<input type="date" class="input-date" name="accNew.date" ng-model="accNew.date" />
 					</div>
-					<div class="col-xs-3">
+					<div class="col-btc">
 						<input type="text" name="accNew.btc" ng-model="accNew.btc" placeholder="BTC" />
 					</div>
-					<div class="col-xs-3">
+					<div class="col-currency">
 						<input type="text" name="accNew.cur" ng-model="accNew.cur" placeholder="EUR" />
 					</div>
-					<div class="col-xs-3">
+					<div class="col-rate">
 						<button ng-click="addNew(accNew)">Add</button>
 					</div>
 				</li>
 				<li class="row total-row">
-					<div class="col-xs-3">Total</div>
-					<div class="col-xs-3">{% getTotals().btc | number:8 %}</div>
-					<div class="col-xs-3">{% getTotals().cur | number:2 %}</div>
-					<div class="col-xs-3">{% getTotals().cur/getTotals().btc | number:2 %}</div>
-				</li>
-				<li class="row market-row" ng-show="purchases.length > 0">
-					<div class="col-xs-3">
-						<select ng-model="market" ng-options="m.name for m in markets"></select>
-					</div>
-					<div class="col-xs-3">{% getTotals().btc | number:8 %}</div>
-					<div class="col-xs-3">{% (getTotals().btc * market.sells) | number:2 %}</div>
-					<div class="col-xs-3">{% market.sells | number:2 %}</div>
-				</li>
-				<li class="row difference-row" ng-show="purchases.length > 0">
-					<div class="col-xs-offset-6 col-xs-3">{% (getTotals().btc * market.sells - getTotals().cur) | number:2 %}</div>
-					<div class="col-xs-3">{% (getTotals().btc * market.sells - getTotals().cur) / getTotals().cur * 100 | number:2 %}%</div>
+					<div class="col-date ">Total</div>
+					<div class="col-btc ms-text">{% getTotals().btc | number:8 %}</div>
+					<div class="col-currency ms-text">{% getTotals().cur | number:2 %}</div>
+					<div class="col-rate ms-text">{% getTotals().cur/getTotals().btc | number:2 %}</div>
 				</li>
 			</ul>
+			<div class="summary">
+				<select ng-model="market" ng-options="m.name for m in markets"></select>
+				sells at <span class="ms-text">{% market.sells | number:2 %}</span>,
+				your total BTCs <span class="ms-text">{% getTotals().btc | number:8 %}</span>
+				are worth <span class="ms-text">{% (getTotals().btc * market.sells) | number:2 %}</span>.
+				You have spent <span class="ms-text">&euro;{% getTotals().cur | number:2 %}</span>
+				which makes a difference of <span class="ms-text">{% (getTotals().btc * market.sells - getTotals().cur) | number:2 %}</span>
+				({% (getTotals().btc * market.sells - getTotals().cur) / getTotals().cur * 100 | number:2 %}%)
+			</div>
 		</div>
 	</div>
 </section>
