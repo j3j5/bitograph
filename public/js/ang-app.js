@@ -1,5 +1,18 @@
 
 var accList = angular.module('AccountList', [])
+.controller('MetricsController', function($scope, $element) {
+
+	var minDate = '2014-01-30';
+	var maxDate = '2014-03-22';
+
+	$scope.data = {
+		startDate: {selected: '2014-03-15', min: minDate, max: maxDate},
+		endDate:   {selected: '2014-03-22', min: minDate, max: maxDate},
+		markets:   ['bitonic', 'bitpay'],
+		market:    'bitonic'
+	};
+
+})
 .controller('MainChartController', function($scope, $element) {
 
 	$scope.chart = BCPTChart;
