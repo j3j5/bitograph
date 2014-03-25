@@ -1,19 +1,39 @@
 
 var accList = angular.module('AccountList', [])
-.controller('MetricsController', function($scope, $element) {
+.service('StateProv', function () {
+	// https://variadic.me/posts/2013-10-15-share-state-between-controllers-in-angularjs.html
+	'use strict';
 
-	var minDate = '2014-01-30';
-	var maxDate = '2014-03-22';
+	var today = '2014-03-23';
+
+	var state = {
+		startDate:   '2014-03-16',
+		endDate:     today,
+		minDateData: '2014-01-30',
+		maxDateData: today,
+		market: 'bitonic'
+	};
+
+	return {
+		state: state,
+	};
+})
+.controller('MetricsController', function($scope, StateProv) {
+
+	$scope.state = StateProv.state;
 
 	$scope.data = {
-		startDate: {selected: '2014-03-15', min: minDate, max: maxDate},
-		endDate:   {selected: '2014-03-22', min: minDate, max: maxDate},
-		markets:   ['bitonic', 'bitpay'],
-		market:    'bitonic'
+		markets:   ['bitonic', 'bitpay']
 	};
 
 })
-.controller('MainChartController', function($scope, $element) {
+.controller('MainChartController', function($scope, StateProv, $http, $element) {
+
+	$scope.state = StateProv.state;
+
+	$scope.$watchCollection('state', function (newVal, oldVal) {
+		$scope.fetchChartData();
+	});
 
 	$scope.chart = BCPTChart;
 
@@ -31,6 +51,26 @@ var accList = angular.module('AccountList', [])
 		});
 	}
 
+	$scope.fetchChartData = function () {
+		$http({
+			url: 'http://javi.bitcoinprice.today/ajax/bitonic',
+			method: 'POST',
+			data: 'start-day=' + $scope.state.startDate + '&end-day=' + $scope.state.endDate + '&chart-market=' + $scope.state.market,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		})
+		.success(function(response, status, headers, config) {
+			$scope.updateChart(response);
+		}).error(function(data, status, headers, config) {
+			console.log('error');
+		});
+	}
+
+	$scope.updateChart = function (chartData) {
+		$scope.chart.update({
+			chartType: chartData.type,
+			data: chartData.data
+		});
+	}
 })
 .controller('AccountListController', function($scope, $filter) {
 

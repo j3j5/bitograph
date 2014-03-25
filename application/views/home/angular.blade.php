@@ -21,16 +21,18 @@
 <section id="main" ng-app="AccountList">
 	<div ng-controller="MetricsController">
 		Market:
-		<select ng-model="data.market" ng-options="m for m in data.markets" name="chart-market"></select>
+		<select ng-model="state.market" ng-options="m for m in data.markets" name="chart-market"></select>
 		Time:
 		<input type="date" name="start-day"
 			   class="input-sm"
-			   value="{% data.startDate.selected %}"
-			   min="{% data.startDate.min %}" max="{% data.startDate.max %}">
+			   ng-model="state.startDate"
+			   value="{% state.startDate %}"
+			   min="{% state.minDateData %}" max="{% state.maxDateData %}">
 		<input type="date" name="end-day"
 			   class="input-sm"
-			   value="{% data.endDate.selected %}"
-			   min="{% data.endDate.min %}" max="{% data.endDate.min %}" >
+			   ng-model="state.endDate"
+			   value="{% state.endDate %}"
+			   min="{% state.minDateData %}" max="{% state.maxDateData %}" >
 		<button id="update-chart" class="btn">Go</button>
 	</div>
 	<div ng-controller="MainChartController" ng-init="init()">
