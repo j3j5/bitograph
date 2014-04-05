@@ -70,7 +70,20 @@
 				</div>
 			</div>
 		</div>
-		<div ng-controller="AccountListController" class="account-list col-xs-12 col-sm-6">
+		<div id="donations" class="col-xs-12 col-sm-5 col-sm-offset-1">
+			<h3 class="light-text">
+				We accept donations:
+			</h3>
+			<div>
+				<b>฿</b>
+				address
+				<kbd>1FVFeaRvFtCxyTy7KzYKRnM92syDJpVe8p</kbd>
+			</div>
+			<div class="qr">
+				<img id="qr-thumbnail" class="center-block" src="./img/donation/donation-qr-small.png">
+			</div>
+		</div>
+		<!-- div ng-controller="AccountListController" class="account-list col-xs-12 col-sm-6">
 			<h3 class="light-text">
 				Your transactions
 			</h3>
@@ -120,7 +133,7 @@
 				which makes a difference of <span class="ms-text">{% (getTotals().btc * market.sells - getTotals().cur) | number:2 %}</span>
 				({% (getTotals().btc * market.sells - getTotals().cur) / getTotals().cur * 100 | number:2 %}%)
 			</div>
-		</div>
+		</div -->
 	</div>
 </section>
 
