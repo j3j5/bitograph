@@ -78,21 +78,22 @@ class Home_Controller extends Base_Controller {
 		Asset::container('footer')->script('charts', 'js/charts-ang.js');
 		Asset::container('footer')->script('angApp', 'js/ang-app.js');
 
-		if(!in_array($market, Config::get('application.supported_markets'))) {
-// 			var_dump($market);
-// 			var_dump(Config::get('application.supported_markets'));
-			return Response::error('404');;
+		$markets = Config::get('application.supported_markets');
+
+		if(!in_array($market, $markets)) {
+			return Response::error('404');
 		}
 
-		$chart_selector = array(
-			'start' => date('Y-m-d', strtotime('-5days')),
-			'end'   => date('Y-m-d'),
-			'min'   => '2014-01-29',
-			'max'   => date('Y-m-d')
+		$today = date('Y-m-d');
+		$view_params = array(
+			'startDate'       => date('Y-m-d', strtotime('-5days')),
+			'endDate'         => $today,
+			'calendarMinDate' => '2014-01-29',
+			'calendarMaxDate' => $today,
+			'market'          => $market
 		);
 
-//		$prices = Prices::get_uncompressed_blob($market, TRUE);
-		$prices = Prices::get_price_by_range($chart_selector['start'], $chart_selector['end'] . ' 23:59:59', $market);
+		$prices = Prices::get_price_by_range($view_params['startDate'], $view_params['endDate'] . ' 23:59:59', $market);
 		$data_prices = array();
 
 		if ($market == 'bitonic') {
@@ -133,8 +134,9 @@ class Home_Controller extends Base_Controller {
 			);
 		}
 
-		$view = View::make('home.angular')->with('data', json_encode($data));
-		return $view;
+		return View::make('home.angular')
+			->with('chart_data', json_encode($data))
+			->with('view_params', json_encode($view_params));
 	}
 
 }

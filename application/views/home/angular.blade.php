@@ -127,9 +127,12 @@
 
 </body>
 <script>
-	var view = {
-		'HOST': '{{ URL::base() }}',
-		'chartData': {{ $data }}
+	var BCPT = {
+		view: {
+			'HOST': '{{ URL::base() }}',
+			'parameters': {{ $view_params }},
+			'chartData': {{ $chart_data }}
+		}
 	};
 </script>
 {{ Asset::container('footer')->scripts() }}

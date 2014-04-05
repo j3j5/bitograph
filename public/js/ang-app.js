@@ -4,14 +4,12 @@ var accList = angular.module('AccountList', [])
 	// https://variadic.me/posts/2013-10-15-share-state-between-controllers-in-angularjs.html
 	'use strict';
 
-	var today = '2014-03-23';
-
 	var state = {
-		startDate:   '2014-03-16',
-		endDate:     today,
-		minDateData: '2014-01-30',
-		maxDateData: today,
-		market: 'bitonic'
+		startDate:   BCPT.view.parameters.startDate,
+		endDate:     BCPT.view.parameters.endDate,
+		minDateData: BCPT.view.parameters.calendarMinDate,
+		maxDateData: BCPT.view.parameters.calendarMaxDate,
+		market:      BCPT.view.parameters.market
 	};
 
 	return {
@@ -42,18 +40,18 @@ var accList = angular.module('AccountList', [])
 		var $chart = $element[0].querySelectorAll('.chart')[0];
 
 		$scope.chart.init({
-			chartType: view.chartData.type,
-			data: view.chartData.data,
+			chartType: BCPT.view.chartData.type,
+			data: BCPT.view.chartData.data,
 			parent: $chart,
 			boxSize: {'width': $chart.offsetWidth, 'height': 300},
 			tooltip: $element[0].querySelectorAll('.chart-tooltip')[0], //$chart.find('.chart-tooltip'),
-			chartOptions: view.chartData.options
+			chartOptions: BCPT.view.chartData.options
 		});
 	}
 
 	$scope.fetchChartData = function () {
 		$http({
-			url: view.HOST + '/ajax/bitonic',
+			url: BCPT.view.HOST + '/ajax/bitonic',
 			method: 'POST',
 			data: 'start-day=' + $scope.state.startDate + '&end-day=' + $scope.state.endDate + '&chart-market=' + $scope.state.market,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -74,12 +72,12 @@ var accList = angular.module('AccountList', [])
 })
 .controller('ConverterController', function($scope) {
 
-		var len = view.chartData.data.values.length;
+		var lastValues = BCPT.view.chartData.data.values[ BCPT.view.chartData.data.values.length-1 ];
 
 		$scope.lastValue = {
-			datetime: view.chartData.data.values[len-1][0],
-			buy: view.chartData.data.values[len-1][1][0],
-			sell: view.chartData.data.values[len-1][1][1],
+			datetime: lastValues[0],
+			buy: lastValues[1][0],
+			sell: lastValues[1][1],
 		};
 
 
@@ -89,9 +87,9 @@ var accList = angular.module('AccountList', [])
 	$scope.purchases = [
 	];
 
-	var len = view.chartData.data.values.length;
+	var lastValues = BCPT.view.chartData.data.values[ BCPT.view.chartData.data.values.length-1 ]
 	$scope.markets = [
-		{name: 'Bitonic', buys: view.chartData.data.values[len-1][1][0], sells: view.chartData.data.values[len-1][1][1]},
+		{name: 'Bitonic', buys: lastValues[1][0], sells: lastValues[1][1]},
 		{name: 'Bitpay',  buys: null,   sells: 487.87},
 	];
 	$scope.market = $scope.markets[0];
