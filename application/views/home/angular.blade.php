@@ -8,17 +8,18 @@
 
 <body>
 
+<div id="header-net" style="position: absolute; top: 0px; right: 0px; height: 120px; width: 1200px;">
+</div>
+
 <header class="navbar navbar-static-top" role="banner">
 	<div class="navbar-header">
 		<a href="/" class="navbar-brand">
 			<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
 		</a>
 	</div>
-	<div id="header-net" style="position: absolute; top: 0px; right: 0px; height: 70px; width: 750px;">
-	</div>
 </header>
 
-<section id="main" ng-app="AccountList">
+<section id="main" ng-app="AccountList" style="z-index: 1000; position: relative;">
 	<div ng-controller="MetricsController">
 		Market:
 		<select ng-model="state.market" ng-options="m for m in data.markets" name="chart-market"></select>
@@ -42,6 +43,33 @@
 		</div>
 	</div>
 	<div class="container main-container">
+		<div ng-controller="ConverterController" class="col-sm-6 col-md-6">
+			<div id="converter">
+				<h3 class="light-text">On <span>{% lastValue.datetime | date:'EEE, MMM dd, HH:mm' %}</span></h3>
+				<div class="unity-values row">
+					<div class="value ref col-xs-2"><span class="cur">฿</span> <span class="price">1</span></div>
+					<div class="value buy col-xs-4"><span class="cur">&euro;</span> <span class="price">{% lastValue.buy %}</span></div>
+					<div class="value sell col-xs-4"><span class="cur">&euro;</span> <span class="price">{% lastValue.sell %}</span></div>
+					<div class="value diff col-xs-2"> <span class="price">{% lastValue.buy - lastValue.sell | number:2 %}</span></div>
+				</div>
+				<div class="row">
+					<div class="input-group">
+						<span class="input-group-addon">฿</span>
+						<input ng-model="value" class="form-control" name="base" placeholder="1.0000">
+					</div>
+				</div>
+				<div class="values row">
+					<div class="value buy col-xs-6">
+						<span class="cur">&euro;</span>
+						<span class="price">{% lastValue.buy * (value || 1) | number:2 %}</span>
+					</div>
+					<div class="value sell col-xs-6">
+						<span class="cur">&euro;</span>
+						<span class="price">{% lastValue.sell * (value || 1) | number:2 %}</span>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div ng-controller="AccountListController" class="account-list col-xs-12 col-sm-6">
 			<h3 class="light-text">
 				Your transactions

@@ -6,7 +6,7 @@ body{font-family:'Lato',sans-serif;background-color:#f6f6f6}
 .main-container{background-color:#fff;margin-top:20px;margin-bottom:40px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box}
 .navbar-brand{color:#2bbbd8;font-size:32px}
 #header-net svg{background-color:#f6f6f6;width:100%;height:100%}
-#header-net path{fill:none;stroke:#e0e0e0;stroke-width:1px}
+#header-net path{fill:none;stroke:#f6f6f6;stroke-width:1px}
 #chart-box{padding-bottom:20px;margin-bottom:20px}
 .chart{font-family:'Droid Sans Mono',sans-serif;position:relative;background-color:#fff}.chart .chart-tooltip{position:absolute;top:0;display:none;background-color:#f5f5f5;padding:5px 10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;-webkit-box-shadow:0 4px 12px #bfbfbf;-moz-box-shadow:0 4px 12px #bfbfbf;box-shadow:0 4px 12px #bfbfbf}.chart .chart-tooltip .date{font-size:14px}.chart .chart-tooltip .date span{font-size:11px;color:#808080}
 .chart .chart-tooltip .metric{font-weight:700;font-size:14px}.chart .chart-tooltip .metric span{font-weight:normal;font-size:10px;color:#808080}
@@ -27,7 +27,7 @@ body{font-family:'Lato',sans-serif;background-color:#f6f6f6}
 .account-list ul{text-align:right;list-style:none}.account-list ul input,.account-list ul button,.account-list ul select{width:100%;height:28px}
 .account-list li{line-height:28px}.account-list li.purchase-row{color:#bfbfbf}
 .account-list li.purchase-row:hover{color:#1f1f1f}
-.account-list .remove-row{position:absolute;right:6px}.account-list .remove-row a{height:14px;width:14px;background-color:#f5f5f5;color:#bfbfbf;line-height:12px;display:inline-block;text-align:center;-webkit-border-radius:50% 50%;-moz-border-radius:50% 50%;border-radius:50% 50%;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box}.account-list .remove-row a:hover{background-color:#808080;color:#fff;text-decoration:none;cursor:pointer}
+.account-list .remove-row a{height:14px;width:14px;background-color:#f5f5f5;color:#bfbfbf;line-height:12px;display:inline-block;text-align:center;-webkit-border-radius:50% 50%;-moz-border-radius:50% 50%;border-radius:50% 50%;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box}.account-list .remove-row a:hover{background-color:#808080;color:#fff;text-decoration:none;cursor:pointer}
 .account-list .total-row{background-color:#e0e0e0;color:#1f1f1f;margin-top:15px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box}
 .account-list .col-date,.account-list .col-btc{position:relative;float:left;width:28%}
 .account-list .col-currency,.account-list .col-rate{position:relative;float:left;width:18%}

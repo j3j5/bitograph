@@ -53,7 +53,7 @@ var accList = angular.module('AccountList', [])
 
 	$scope.fetchChartData = function () {
 		$http({
-			url: 'http://javi.bitcoinprice.today/ajax/bitonic',
+			url: view.HOST + '/ajax/bitonic',
 			method: 'POST',
 			data: 'start-day=' + $scope.state.startDate + '&end-day=' + $scope.state.endDate + '&chart-market=' + $scope.state.market,
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -72,13 +72,26 @@ var accList = angular.module('AccountList', [])
 		});
 	}
 })
+.controller('ConverterController', function($scope) {
+
+		var len = view.chartData.data.values.length;
+
+		$scope.lastValue = {
+			datetime: view.chartData.data.values[len-1][0],
+			buy: view.chartData.data.values[len-1][1][0],
+			sell: view.chartData.data.values[len-1][1][1],
+		};
+
+
+})
 .controller('AccountListController', function($scope, $filter) {
 
 	$scope.purchases = [
 	];
 
+	var len = view.chartData.data.values.length;
 	$scope.markets = [
-		{name: 'Bitonic', buys: 498.61, sells: 481.15},
+		{name: 'Bitonic', buys: view.chartData.data.values[len-1][1][0], sells: view.chartData.data.values[len-1][1][1]},
 		{name: 'Bitpay',  buys: null,   sells: 487.87},
 	];
 	$scope.market = $scope.markets[0];
@@ -137,6 +150,27 @@ var svg = d3.select("#header-net")
 	.append("svg")
 	.attr("preserveAspectRatio", "xMidYMid slice")
 	.attr("viewBox", [0, 0, w, h].join(' '))
+
+var meshBgGradient = svg.append("svg:defs")
+	.append("svg:linearGradient")
+	.attr("id", "meshBgGradient")
+	.attr("x1", "0%")
+	.attr("y1", "0%")
+	.attr("x2", "100%")
+	.attr("y2", "0%")
+	.attr("spreadMethod", "pad");
+
+meshBgGradient.append("svg:stop")
+	.attr("offset", "0%")
+	.attr("stop-color", "#f6f6f6");
+meshBgGradient.append("svg:stop")
+	.attr("offset", "100%")
+	.attr("stop-color", "#d0d0d0");
+
+svg.append("rect")
+	.style("fill", "url(#meshBgGradient)")
+	.attr("width", "100%")
+	.attr("height", "100%");
 
 svg.append("g")
 	.selectAll("path")
