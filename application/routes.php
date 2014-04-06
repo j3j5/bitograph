@@ -33,7 +33,6 @@
 */
 
 Route::get('/', 'home@index');
-Route::get('/angular', 'home@angular');
 Route::get('/(:any)', 'home@index');
 
 Route::any('/ajax/bitonic', 'ajax@bitonic');

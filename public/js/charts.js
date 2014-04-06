@@ -1,5 +1,5 @@
 
-var TWCAdvancedChart = {
+var BCPTChart = {
 
 	chartType: null,
 	cachedData: [],
@@ -36,7 +36,7 @@ var TWCAdvancedChart = {
 		this.parseData(options.data);
 		this.shownDataDeepCopy();
 
-		this.container = d3.select(options.parent[0]).select('svg'); // TODO: pass an svg element
+		this.container = d3.select(options.parent).select('svg');
 		this.boxSize = options.boxSize || {width: '750px', height: '300px'};
 		this.tooltip = options.tooltip || null;
 		this.setInitialSize();
@@ -251,7 +251,7 @@ var TWCAdvancedChart = {
 		}
 
 		// Create Y axis
-		$.each(this.yAxis, function (idx, axis) {
+		angular.forEach(this.yAxis, function(axis, idx) {
 			var marginLeft = ( idx == 0 )
 				? that.margin.left
 				: that.margin.left + that.width;
@@ -318,7 +318,8 @@ var TWCAdvancedChart = {
 		}
 
 		var dotStyle = this.dotStyle;
-		$.each(this.graphSeries, function (idx, serie) {
+
+		angular.forEach(this.graphSeries, function(serie, idx) {
 			that.svg.append("svg:path")
 				.attr("fill", "none")
 				.attr("stroke", serie.color)
@@ -343,54 +344,71 @@ var TWCAdvancedChart = {
 
 	getTooltipMetrics: function (idx) {
 		var that = this;
-		var metrics = $('<div>').attr('class', 'metric');
-		$.each(this.shownData, function (i, serie) {
-			$('<span>').css('color', serie.color).html('&#9679;').appendTo(metrics);
-			$('<span>').text(' ' + serie.key).appendTo(metrics);
-			metrics.append(' ' + numberFormat(serie.values[idx].y, 2))
-				.append('<br>');
+
+		var metrics = '<div class="metric">';
+
+		angular.forEach(this.shownData, function(serie, i) {
+			metrics +=
+				'<span style="color: ' + serie.color + ';">&#9679;</span>'
+				+ '<span> ' + serie.key + '</span>'
+				+ ' ' + serie.values[idx].y + '<br>'// TODO: numberFormat(serie.values[idx].y, 2)
 		});
 
 		if (this.shownData.length == 2) {
 			var diff = this.shownData[0].values[idx].y - this.shownData[1].values[idx].y;
-			metrics.append('<span>diff:</span> ' + numberFormat(diff, 2));
+			diff = Math.round(diff * 100) / 100;
+			metrics += '<span>diff:</span> ' + diff; // TODO: numberFormat(diff, 2)
 		}
+
+		metrics += '</div>';
 
 		return metrics;
 	},
 
 	hideTooltip: function () {
-		this.tooltip.css('display', 'none');
+		this.tooltip.style.display='none';
 	},
 
 	placeTooltip: function (mouse) {
 		var xOffset = 22;
 		var top = mouse[1] + 8; // offset: 8
-		this.tooltip.css({'display': 'block', 'top': top + 'px'});
 		var width = this.boxSize.width;
+		var left  = '',
+			right = '';
+
 		if (mouse[0] > (width / 2)) {
-			this.tooltip.css('left', '').css('right', ((width - mouse[0]) + xOffset) + 'px');
+			right = ((width - mouse[0]) + xOffset) + 'px';
 		}
 		else {
-			this.tooltip.css('left', (mouse[0] + xOffset) + 'px').css('right', '');
+			left = (mouse[0] + xOffset) + 'px';
 		}
+
+		this.tooltip.style.display = 'block';
+		this.tooltip.style.top = top + 'px';
+		this.tooltip.style.left  = left;
+		this.tooltip.style.right = right;
 	},
 
 	updateTooltip: function (mouse, idx) {
+		// TODO: create directive, use ngBindHtml
 
 		if (!this.shownData[0].values[idx]) {
 			return;
 		}
 
-		var date = moment(this.shownData[0].values[idx].x);
-		var dateStr = {'day': date.format('ddd'), 'date': date.format('MMM D'), 'year': date.format('YYYY'), 't': date.format('HH:mm')};
-		date = $('<div>').attr('class', 'date')
-			.html('<b>' + dateStr.t + '</b>')
-			.append(', ' + dateStr.day + ', ' + dateStr.date + ' ')
-			.append($('<span>').text(dateStr.year))
-		var metrics = this.getTooltipMetrics(idx);
+		var format = d3.time.format("%a %b %-e %Y %H:%M");
+		var dateStr = format(new Date(this.shownData[0].values[idx].x)).split(' ');
 
-		this.tooltip.empty().append(date).append(metrics);
+		var tooltipHtml =
+			'<div class="date">'
+				+ '<b>' + dateStr[4] + '</b>'
+				+ ', ' + dateStr[0] + ', ' + dateStr[1] + ' ' + dateStr[2]
+				+ ' <span>' + dateStr[3] + '</span>'
+			+ '</div>';
+
+		tooltipHtml += this.getTooltipMetrics(idx);
+
+		this.tooltip.innerHTML = tooltipHtml;
 		this.placeTooltip(mouse);
 	},
 
@@ -436,7 +454,7 @@ var TWCAdvancedChart = {
 
 		var graphSeries = new Array();
 
-		$.each(this.shownData, function (idx, serie) {
+		angular.forEach(this.shownData, function(serie, idx) {
 
 			graphSeries[idx] = serie;
 
@@ -463,7 +481,7 @@ var TWCAdvancedChart = {
 				.scale(graphSeries[idx].y)
 				.orient(yAxisOrient)
 				.tickValues([seriesMin, middle, seriesMax])
-				.tickFormat(function(d){ return numberFormat(d, 2); });
+				.tickFormat(function(d){ return d; }); // numberFormat(d, 2);
 
 			graphSeries[idx].line = d3.svg.line()
 				.x(function(d, i) {
@@ -608,7 +626,7 @@ var TWCAdvancedChart = {
 	},
 
 	shownDataDeepCopy: function () {
-		this.shownData = $.extend(true, [], this.cachedData); // Deep copy by value
+		this.shownData = angular.copy(this.cachedData); // Deep copy by value
 		this.changeDataFrequency();
 	},
 
@@ -670,153 +688,3 @@ var TWCAdvancedChart = {
 	},
 
 }
-
-var BitoConverter = {
-	$el: null,
-	$input: null,
-	$values: {buy: null, sell: null},
-	$date: null,
-	values: null,
-	timeout: {keyup: null},
-
-	init: function (element, values) {
-		this.$el = element;
-		this.$date = this.$el.find('h3 span');
-		this.$input = this.$el.find('[name=base]');
-
-		var cachedValue = this.getCachedValue();
-		if (cachedValue) {
-			this.$input.val(cachedValue);
-		}
-
-		this.values = values;
-
-		var refdate = moment(this.values.datetime);
-		this.$date.html(refdate.format('ddd, MMM D, <b>HH:mm</b>'));
-
-		this.updateValues();
-
-		this.$input.on('keyup', $.proxy(this.inputKeyup, this));
-		this.$input.on('click', $.proxy(this.inputFocus, this));
-		this.$input.on('blur', $.proxy(this.inputBlur, this));
-	},
-
-	updateValues: function () {
-		var base = +this.$input.val();
-
-		if ( base == 0 || isNaN(base) ) {
-			base = 1;
-		}
-
-		this.$el.find('.unity-values .buy span.price').text( numberFormat( this.values.buy, 2 ) );
-		this.$el.find('.unity-values .sell span.price').text( numberFormat( this.values.sell, 2 ) );
-		this.$el.find('.unity-values .diff span.price').text( numberFormat( this.values.buy - this.values.sell, 2 ) );
-		this.$el.find('.values .buy span.price').text( numberFormat( base * this.values.buy, 2 ) );
-		this.$el.find('.values .sell span.price').text( numberFormat( base * this.values.sell, 2 ) );
-	},
-
-	inputKeyup: function () {
-		var that = this;
-		window.clearTimeout(this.timeout.keyup);
-		this.timeout.keyup = setTimeout(function () {
-			that.updateValues();
-		}, 350);
-	},
-
-	inputFocus: function () {
-		this.$input.select();
-	},
-
-	inputBlur: function () {
-		var value = null;
-		if (this.$input.val()) {
-			value = numberFormat(this.$input.val(), 7);
-			this.$input.val(value);
-		}
-		this.setCachedValue(value);
-	},
-
-	getCachedValue: function () {
-		var value = null;
-		if (localStorage) {
-			value = localStorage.getItem('converter-value');
-		}
-		return value;
-	},
-
-	setCachedValue: function (val) {
-		if (localStorage) {
-			(val)
-				? localStorage.setItem('converter-value', val)
-				: localStorage.removeItem('converter-value');
-		}
-	},
-}
-
-var svgChart = null;
-
-var chart = {
-	getData: function () {
-		$.ajax({
-			type: 'POST',
-			url: 'http://bitcoinprice.today/ajax/bitonic',
-			dataType: 'json',
-			data: {
-				'start-day': $('[name="start-day"]').val(),
-				'end-day': $('[name="end-day"]').val(),
-				'chart-market': $('[name="chart-market"]').val(),
-			},
-			success: function (response) {
-				svgChart.update({
-					chartType: response.type,
-					data: response.data
-				});
-			}
-		});
-	}
-}
-
-var svgChart = null;
-
-$(document).ready(function(){
-	svgChart = TWCAdvancedChart;
-
-	var $chart = $('#chart').attr('class', 'chart');
-
-	svgChart.init({
-		chartType: view.chartData.type,
-		data: view.chartData.data,
-		parent: $chart,
-		boxSize: {'width': $chart.width(), 'height': 300},
-		tooltip: $chart.find('.chart-tooltip'),
-		chartOptions: view.chartData.options
-	});
-
-	var len = view.chartData.data.values.length;
-	var lastValue = {
-		datetime: view.chartData.data.values[len-1][0],
-		buy: view.chartData.data.values[len-1][1][0],
-		sell: view.chartData.data.values[len-1][1][1],
-	};
-	BitoConverter.init($('#converter'), lastValue);
-
-	var freqs = [['5 min', 5], ['10 min', 10], ['30 min', 30], ['1 hr', 60], ['2 hr', 120], ['6 hr', 360],
-		['12 hr', 720], ['1 day', 1440], ['2 day', 2880]];
-	$.each(freqs, function (idx, freq) {
-		$('<button>').attr('class', 'btn btn-xs').text(freq[0])
-			.on('click', function () { svgChart.changeChartFrequency(freq[1]) })
-			.appendTo($("#frequencies"));
-	});
-
-	$('#update-chart').on('click', function () {
-		chart.getData();
-	});
-
-	$('#chart-market').on('change', function () {
-		chart.getData();
-	});
-
-	$('#qr-thumbnail').on('click', function () {
-		$('#qr-modal').modal('toggle')
-	});
-});

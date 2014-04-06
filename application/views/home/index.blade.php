@@ -1,130 +1,158 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		ga('create', 'UA-35249935-3', 'bitcoinprice.today');
-		ga('send', 'pageview');
-	</script>
+<head>
+	<title>Bitcoin Price TODAY!</title>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
 	{{ Asset::container('head')->styles() }}
-		<title>Bitcoin Price TODAY!</title>
-	</head>
+	@include('partials.analytics')
+</head>
 
-	<body>
+<body>
 
-	<header class="navbar navbar-static-top" role="banner">
-		<div class="navbar-header">
-			<a href="/" class="navbar-brand">Bitochart</a>
+<div id="header-net" style="position: absolute; top: 0px; right: 0px; height: 120px; width: 1200px;">
+</div>
+
+<header class="navbar navbar-static-top" role="banner">
+	<div class="navbar-header">
+		<a href="/" class="navbar-brand">
+			<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
+		</a>
+		<!-- a href="/login" style="float: right;">Login</a -->
+	</div>
+</header>
+
+<section id="main" ng-app="AccountList" style="z-index: 1000; position: relative;">
+	<div ng-controller="MetricsController" class="container">
+		Market:
+		<select ng-model="state.market" ng-options="m for m in data.markets" name="chart-market"></select>
+		Time:
+		<input type="date" name="start-day"
+			   class="input-sm"
+			   ng-model="state.startDate"
+			   value="{% state.startDate %}"
+			   min="{% state.minDateData %}" max="{% state.maxDateData %}">
+		<input type="date" name="end-day"
+			   class="input-sm"
+			   ng-model="state.endDate"
+			   value="{% state.endDate %}"
+			   min="{% state.minDateData %}" max="{% state.maxDateData %}" >
+		<button id="update-chart" class="btn">Go</button>
+	</div>
+	<div id="main-chart" ng-controller="MainChartController" ng-init="init()">
+		<div class="chart">
+			<svg></svg>
+			<div class="chart-tooltip"></div>
 		</div>
-		<!--<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-			<ul class="nav navbar-nav">
-				<li>
-				<?php// if(!Auth::check()) { ?>
-					<a href="/login">Login</a>
-				<?php// } else { ?>
-					<a href="/logout">Log out</a>
-				<?php// } ?>
+		<div id="frequencies" class="container">
+			<span>Frequency: </span>
+			<button ng-repeat="freq in freqs" ng-click="chageFrequency(freq[1])" class="btn btn-xs">{% freq[0] %}</button>
+		</div>
+	</div>
+	<div class="container main-container">
+		<div ng-controller="ConverterController" class="col-sm-6 col-md-6">
+			<div id="converter">
+				<h3 class="light-text">On <span>{% lastValue.datetime | date:'EEE, MMM dd, HH:mm' %}</span></h3>
+				<div class="unity-values row">
+					<div class="value ref col-xs-2"><span class="cur">฿</span> <span class="price">1</span></div>
+					<div class="value buy col-xs-4"><span class="cur">&euro;</span> <span class="price">{% lastValue.buy %}</span></div>
+					<div class="value sell col-xs-4"><span class="cur">&euro;</span> <span class="price">{% lastValue.sell %}</span></div>
+					<div class="value diff col-xs-2"> <span class="price">{% lastValue.buy - lastValue.sell | number:2 %}</span></div>
+				</div>
+				<div class="row">
+					<div class="input-group">
+						<span class="input-group-addon">฿</span>
+						<input ng-model="value" class="form-control" name="base" placeholder="1.0000">
+					</div>
+				</div>
+				<div class="values row">
+					<div class="value buy col-xs-6">
+						<span class="cur">&euro;</span>
+						<span class="price">{% lastValue.buy * (value || 1) | number:2 %}</span>
+					</div>
+					<div class="value sell col-xs-6">
+						<span class="cur">&euro;</span>
+						<span class="price">{% lastValue.sell * (value || 1) | number:2 %}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="donations" class="col-xs-12 col-sm-5 col-sm-offset-1">
+			<h3 class="light-text">
+				We accept donations:
+			</h3>
+			<div>
+				<b>฿</b>
+				address
+				<kbd>1FVFeaRvFtCxyTy7KzYKRnM92syDJpVe8p</kbd>
+			</div>
+			<div class="qr">
+				<img id="qr-thumbnail" class="center-block" src="./img/donation/donation-qr-small.png">
+			</div>
+		</div>
+		<!-- div ng-controller="AccountListController" class="account-list col-xs-12 col-sm-6">
+			<h3 class="light-text">
+				Your transactions
+			</h3>
+			<ul>
+				<li class="row">
+					<div class="col-date">Date</div>
+					<div class="col-btc">BTC</div>
+					<div class="col-currency">EUR</div>
+					<div class="col-rate">EUR/BTC</div>
+				</li>
+				<li class="row purchase-row" ng-repeat="purchase in purchases">
+					<div class="col-date light-text">{% purchase.date | date:'MMM dd, yyyy' %}</div>
+					<div class="col-btc ms-text">{% purchase.btc | number:8 %}</div>
+					<div class="col-currency ms-text">{% purchase.cur | number:2 %}</div>
+					<div class="col-rate ms-text">{% purchase.cur/purchase.btc | number:2 %}</div>
+					<div class="remove-row">
+						<a ng-click="purchases.splice($index, 1)">&times;</a>
+					</div>
+				</li>
+				<li class="row input-row">
+					<div class="col-date">
+						<input type="date" class="input-date" name="accNew.date" ng-model="accNew.date" />
+					</div>
+					<div class="col-btc">
+						<input type="text" name="accNew.btc" ng-model="accNew.btc" placeholder="BTC" />
+					</div>
+					<div class="col-currency">
+						<input type="text" name="accNew.cur" ng-model="accNew.cur" placeholder="EUR" />
+					</div>
+					<div class="col-rate">
+						<button ng-click="addNew(accNew)">Add</button>
+					</div>
+				</li>
+				<li class="row total-row">
+					<div class="col-date ">Total</div>
+					<div class="col-btc ms-text">{% getTotals().btc | number:8 %}</div>
+					<div class="col-currency ms-text">{% getTotals().cur | number:2 %}</div>
+					<div class="col-rate ms-text">{% getTotals().cur/getTotals().btc | number:2 %}</div>
 				</li>
 			</ul>
-		</nav>-->
-		<!-- check for flash notification message -->
-		@if(Session::has('flash_notice'))
-			<div id="flash_notice">{{ Session::get('flash_notice') }}</div>
-		@endif
-	</header>
-
-	<section id="main">
-		<div id="chart-box">
-			<div class="container">
-				Market:
-				<select name="chart-market" id="chart-market">
-					<option value="bitonic" selected="selected">Bitonic</option>
-					<option value="bitpay">Bitpay</option>
-				</select>
-				Time:
-				<input type="date" name="start-day"
-					class="input-sm"
-					value="{{ $chart_selector['start'] }}"
-					min="{{ $chart_selector['min'] }}" max="{{ $chart_selector['max'] }}">
-				<input type="date" name="end-day"
-					class="input-sm"
-					value="{{ $chart_selector['end'] }}"
-					min="{{ $chart_selector['min'] }}" max="{{ $chart_selector['max'] }}" >
-				<button id="update-chart" class="btn">Go</button>
+			<div class="summary">
+				<select ng-model="market" ng-options="m.name for m in markets"></select>
+				sells at <span class="ms-text">{% market.sells | number:2 %}</span>,
+				your total BTCs <span class="ms-text">{% getTotals().btc | number:8 %}</span>
+				are worth <span class="ms-text">{% (getTotals().btc * market.sells) | number:2 %}</span>.
+				You have spent <span class="ms-text">&euro;{% getTotals().cur | number:2 %}</span>
+				which makes a difference of <span class="ms-text">{% (getTotals().btc * market.sells - getTotals().cur) | number:2 %}</span>
+				({% (getTotals().btc * market.sells - getTotals().cur) / getTotals().cur * 100 | number:2 %}%)
 			</div>
-			<div class="col-xs-12">
-				<div id="chart">
-					<svg></svg>
-					<div class="chart-tooltip"></div>
-				</div>
-			</div>
-			<div class="container">
-				<div id="frequencies">
-					<span>Frequency: </span>
-				</div>
-			</div>
-		</div>
+		</div -->
+	</div>
+</section>
 
-		<div class="container">
-			<div class="col-sm-6 col-md-6">
-				<div id="converter">
-					<h3>On <span></span></h3>
-					<div class="unity-values">
-						<div class="value ref col-xs-2"><span class="cur">฿</span> <span class="price">1</span></div>
-						<div class="value buy col-xs-4"><span class="cur">&euro;</span> <span class="price"></span></div>
-						<div class="value sell col-xs-4"><span class="cur">&euro;</span> <span class="price"></span></div>
-						<div class="value diff col-xs-2"> <span class="price"></span></div>
-					</div>
-					<div>
-						<div class="input-group">
-							<span class="input-group-addon">฿</span>
-							<input class="form-control" name="base" placeholder="1.0000">
-						</div>
-					</div>
-					<div class="values">
-						<div class="value buy col-xs-6"><span class="cur">&euro;</span> <span class="price"></span></div>
-						<div class="value sell col-xs-6"><span class="cur">&euro;</span> <span class="price"></span></div>
-					</div>
-				</div>
-			</div>
-			<div id="donations" class="col-xs-5 col-xs-offset-1">
-				<h3>We accept donations: </h3>
-				<div>
-					<b>฿</b>
-					address
-					<kbd>1FVFeaRvFtCxyTy7KzYKRnM92syDJpVe8p</kbd>
-				</div>
-				<div class="qr">
-					<img id="qr-thumbnail" class="center-block" src="./img/donation/donation-qr-small.png">
-				</div>
-			</div>
-		</div>
 
-	</section>
-
-	<div id="qr-modal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Donation</h4>
-				</div>
-				<div class="modal-body">
-					<img class="img-responsive" src="./img/donation/donation-qr-big.png">
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
-	</body>
-	<script>
-		var view = {
-			'chartData': {{ $data }}
-		};
-	</script>
-	{{ Asset::container('footer')->scripts() }}
+</body>
+<script>
+	var BCPT = {
+		view: {
+			'HOST': '{{ URL::base() }}',
+			'parameters': {{ $view_params }},
+			'chartData': {{ $chart_data }}
+		}
+	};
+</script>
+{{ Asset::container('footer')->scripts() }}
 </html>
