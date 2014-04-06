@@ -20,7 +20,7 @@
 </header>
 
 <section id="main" ng-app="AccountList" style="z-index: 1000; position: relative;">
-	<div ng-controller="MetricsController">
+	<div ng-controller="MetricsController" class="container">
 		Market:
 		<select ng-model="state.market" ng-options="m for m in data.markets" name="chart-market"></select>
 		Time:
@@ -36,12 +36,12 @@
 			   min="{% state.minDateData %}" max="{% state.maxDateData %}" >
 		<button id="update-chart" class="btn">Go</button>
 	</div>
-	<div ng-controller="MainChartController" ng-init="init()">
+	<div id="main-chart" ng-controller="MainChartController" ng-init="init()">
 		<div class="chart">
 			<svg></svg>
 			<div class="chart-tooltip"></div>
 		</div>
-		<div id="frequencies">
+		<div id="frequencies" class="container">
 			<span>Frequency: </span>
 			<button ng-repeat="freq in freqs" ng-click="chageFrequency(freq[1])" class="btn btn-xs">{% freq[0] %}</button>
 		</div>
