@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Bitcoin Price TODAY!</title>
 	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
 	{{ Asset::container('head')->styles() }}
-	<title></title>
+	@include('partials.analytics')
 </head>
 
 <body>
@@ -16,6 +17,7 @@
 		<a href="/" class="navbar-brand">
 			<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
 		</a>
+		<!-- a href="/login" style="float: right;">Login</a -->
 	</div>
 </header>
 
