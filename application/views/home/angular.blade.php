@@ -41,6 +41,10 @@
 			<svg></svg>
 			<div class="chart-tooltip"></div>
 		</div>
+		<div id="frequencies">
+			<span>Frequency: </span>
+			<button ng-repeat="freq in freqs" ng-click="chageFrequency(freq[1])" class="btn btn-xs">{% freq[0] %}</button>
+		</div>
 	</div>
 	<div class="container main-container">
 		<div ng-controller="ConverterController" class="col-sm-6 col-md-6">

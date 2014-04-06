@@ -69,6 +69,14 @@ var accList = angular.module('AccountList', [])
 			data: chartData.data
 		});
 	}
+
+	$scope.freqs = [['5 min', 5], ['10 min', 10], ['30 min', 30], ['1 hr', 60], ['2 hr', 120], ['6 hr', 360],
+		['12 hr', 720], ['1 day', 1440], ['2 day', 2880]];
+
+	$scope.chageFrequency = function (freq) {
+		$scope.chart.changeChartFrequency(freq);
+	}
+
 })
 .controller('ConverterController', function($scope) {
 
