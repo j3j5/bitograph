@@ -36,7 +36,6 @@
 			   ng-model="state.endDate"
 			   value="{% state.endDate %}"
 			   min="{% state.minDateData %}" max="{% state.maxDateData %}" >
-		<button id="update-chart" class="btn">Go</button>
 	</div>
 	<div id="main-chart" ng-controller="MainChartController" ng-init="init()">
 		<div class="chart">
