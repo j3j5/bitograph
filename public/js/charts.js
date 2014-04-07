@@ -21,6 +21,7 @@ var BCPTChart = {
 
 	rangeSelection: [null, null],
 	selectionLayer: null,
+	clearZoomBtn: null,
 
 	chartOptions: {},
 	dotStyle: null,
@@ -226,6 +227,8 @@ var BCPTChart = {
 	},
 
 	graphRangeSelectionLayer: function () {
+		var that = this;
+
 		this.selectionLayer = this.svg.append("rect")
 			.attr("class", "twc-graph-selection")
 			.attr("width", 0)
@@ -233,6 +236,32 @@ var BCPTChart = {
 			.attr("opacity", 0.25)
 			.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
 			.attr("fill", "#888888");
+
+		this.clearZoomBtn = this.container.append("g")
+			.attr('opacity', 0)
+			.attr('style', 'cursor: pointer;')
+			.attr("transform", "translate(" + (this.width - 100) + "," + (this.margin.top + 8) + ")")
+			.on('mousemove', function () {
+				d3.event.stopPropagation();
+			})
+			.on('click', function () {
+				that.clearZoom();
+				d3.event.stopPropagation();
+			});
+
+		this.clearZoomBtn.append("rect")
+			.attr('width', '100px')
+			.attr('height', '28px')
+			.attr('fill', '#333333')
+			.attr('rx', 4)
+			.attr('ry', 4);
+		this.clearZoomBtn.append("text")
+			.attr('fill', 'white')
+			.attr('x', 10)
+			.attr('y', 9)
+			.attr('style', 'font-size: 10px;')
+			.attr("transform", "translate(0,8)")
+			.text('Clear Zoom [X]');
 	},
 
 	graphAxis: function () {
@@ -616,8 +645,21 @@ var BCPTChart = {
 			}
 			this.emptyAndBuild();
 		}
+		this.checkZoom();
 		this.clearRangeSelection();
 		return;
+	},
+
+	checkZoom: function () {
+		if (this.cachedData[0].values.length != this.shownData[0].values.length) {
+			this.clearZoomBtn.attr('opacity', .2);
+		}
+	},
+
+	clearZoom: function () {
+		this.clearZoomBtn.attr('opacity', 0);
+		this.shownDataDeepCopy();
+		this.emptyAndBuild();
 	},
 
 	clearSelection: function () {
