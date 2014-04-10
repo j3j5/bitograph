@@ -8,8 +8,7 @@ class Home_Controller extends Base_Controller {
 	public function action_index ($market = 'bitonic') {
 
 		Asset::container('head')->style('style', 'css/style.css');
-		Asset::container('footer')->script('angular', '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.0rc3/angular.js');
-		Asset::container('footer')->script('d3', '//cdnjs.cloudflare.com/ajax/libs/d3/3.4.2/d3.js');
+		Asset::container('footer')->script('libraries', 'js/libraries.js');
 		Asset::container('footer')->script('charts', 'js/charts.js');
 		Asset::container('footer')->script('angApp', 'js/app.js');
 
