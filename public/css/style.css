@@ -1,14 +1,25 @@
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Lato:300,400,700,400italic);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Lato:300,400,700,300italic,400italic);
 body{font-family:'Lato',sans-serif;background-color:#f6f6f6}
+a,a:visited{color:#2bbbd8;-webkit-transition:all 250ms ease;-moz-transition:all 250ms ease;-ms-transition:all 250ms ease;-o-transition:all 250ms ease}a:hover,a:visited:hover{color:#f78d3f;-webkit-transition:none;-moz-transition:none;-ms-transition:none;-o-transition:none}
 .light-text{font-weight:300}
 .bold-text{font-weight:700}
 .ms-text{font-family:'Droid Sans Mono',sans-serif}
+header{margin-bottom:2px}
 .main-container{background-color:#fff;margin-top:20px;margin-bottom:40px;padding-top:12px;padding-bottom:32px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box}
 .navbar-brand{color:#2bbbd8;font-size:32px}
 #header-net svg{background-color:#f6f6f6;width:100%;height:100%}
 #header-net path{fill:none;stroke:#f6f6f6;stroke-width:1px}
+#main-metrics{height:40px;line-height:40px}#main-metrics .market-selector,#main-metrics .dates-selector{position:relative;display:inline-block}#main-metrics .market-selector span.value,#main-metrics .dates-selector span.value{display:inline-block;font-size:22px;line-height:26px;font-style:italic;font-weight:300;padding:2px 10px 4px;margin-right:18px;border:1px solid transparent;border-radius:3px;cursor:default}#main-metrics .market-selector span.value span.small,#main-metrics .dates-selector span.value span.small{font-size:18px}
+#main-metrics .market-selector span.value:hover,#main-metrics .dates-selector span.value:hover{background-color:#ace4f0;box-shadow:inset 0 0 8px -2px #2bbbd8}
+#main-metrics .market-selector ul.options,#main-metrics .dates-selector ul.options{display:none;position:absolute;top:38px;background-color:#f6f6f6;margin:0;padding:0;list-style:none;border:1px solid #f5f5f5;line-height:28px;min-width:120px;box-shadow:0 0 2px 2px #f6f6f6;z-index:10000}#main-metrics .market-selector ul.options li,#main-metrics .dates-selector ul.options li{padding:0 16px}#main-metrics .market-selector ul.options li.opt,#main-metrics .dates-selector ul.options li.opt{cursor:pointer}#main-metrics .market-selector ul.options li.opt:hover,#main-metrics .dates-selector ul.options li.opt:hover{background-color:#70d1e5}
+#main-metrics .market-selector.active ul.options,#main-metrics .dates-selector.active ul.options{display:block}
+#main-metrics .dates-selector ul.options{min-width:330px}
+#main-metrics:hover .market-selector span.value,#main-metrics:hover .dates-selector span.value{border-color:#bfbfbf}
+#main-metrics span.tag{font-size:12px;color:#808080;text-transform:uppercase}
 #chart-box{padding-bottom:20px;margin-bottom:20px}
-#main-chart{background-color:#fff}#main-chart #frequencies{padding:4px 0}
+#main-chart{background-color:#fff}#main-chart #frequencies{font-size:12px;padding:4px 0}#main-chart #frequencies span.tag{color:#808080;text-transform:uppercase}
+#main-chart #frequencies ul{display:inline;list-style:none;margin:0;padding:0}#main-chart #frequencies ul li{display:inline-block;padding:0 4px;cursor:pointer}#main-chart #frequencies ul li:hover{border-bottom:2px solid #f78d3f}
+#main-chart #frequencies ul li.selected{border-bottom:2px solid #2bbbd8}
 .chart{font-family:'Droid Sans Mono',sans-serif;position:relative;background-color:#fff}.chart .chart-tooltip{position:absolute;top:0;display:none;background-color:#f5f5f5;padding:5px 10px;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;-webkit-box-shadow:0 4px 12px #bfbfbf;-moz-box-shadow:0 4px 12px #bfbfbf;box-shadow:0 4px 12px #bfbfbf}.chart .chart-tooltip .date{font-size:14px}.chart .chart-tooltip .date span{font-size:11px;color:#808080}
 .chart .chart-tooltip .metric{font-weight:700;font-size:14px}.chart .chart-tooltip .metric span{font-weight:normal;font-size:10px;color:#808080}
 .chart .chart-tooltip .metric .up{font-weight:700;color:#97d453}

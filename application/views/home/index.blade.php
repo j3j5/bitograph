@@ -22,20 +22,46 @@
 </header>
 
 <section id="main" ng-app="AccountList" style="z-index: 1000; position: relative;">
-	<div ng-controller="MetricsController" class="container">
-		Market:
-		<select ng-model="state.market" ng-options="m for m in data.markets" name="chart-market"></select>
-		Time:
-		<input type="date" name="start-day"
-			   class="input-sm"
-			   ng-model="state.startDate"
-			   value="{% state.startDate %}"
-			   min="{% state.minDateData %}" max="{% state.maxDateData %}">
-		<input type="date" name="end-day"
-			   class="input-sm"
-			   ng-model="state.endDate"
-			   value="{% state.endDate %}"
-			   min="{% state.minDateData %}" max="{% state.maxDateData %}" >
+	<div ng-controller="MetricsController" id="main-metrics" class="container">
+		<span class="tag">Market</span>
+		<div class="market-selector" ng-init="marketActive=false;"
+			ng-mouseenter="marketActive=true;" ng-mouseleave="marketActive=false;" ng-class="{'active': marketActive}">
+			<span class="value">
+				{%state.market%}
+			</span>
+			<ul class="options">
+				<li class="opt" ng-repeat="market in data.markets" ng-click="state.market=market;" ng-show="state.market!=market">
+					{% market %}
+				</li>
+			</ul>
+		</div>
+		<span class="tag">From/To</span>
+		<div class="dates-selector" ng-init="datesActive=false;"
+			ng-mouseenter="datesActive=true;" ng-mouseleave="datesActive=false;" ng-class="{'active': datesActive}">
+			<span class="value">
+				{% state.startDate | date:'MMM dd' %}
+				<span class="small">{% state.startDate | date:'yyyy' %}</span> -
+				{% state.endDate | date:'MMM dd' %}
+				<span class="small">{% state.endDate | date:'yyyy' %}</span>
+			</span>
+			<ul class="options">
+				<li class="opt" ng-repeat="range in data.ranges" ng-click="setDates(range.start, range.end);">
+					{% range.label %}
+				</li>
+				<li>
+					<input type="date" name="start-day"
+						   class="input-sm"
+						   ng-model="state.startDate"
+						   value="{% state.startDate %}"
+						   min="{% state.minDateData %}" max="{% state.maxDateData %}">
+					<input type="date" name="end-day"
+						   class="input-sm"
+						   ng-model="state.endDate"
+						   value="{% state.endDate %}"
+						   min="{% state.minDateData %}" max="{% state.maxDateData %}" >
+				</li>
+			</ul>
+		</div>
 	</div>
 	<div id="main-chart" ng-controller="MainChartController" ng-init="init()">
 		<div class="chart">
@@ -43,8 +69,12 @@
 			<div class="chart-tooltip"></div>
 		</div>
 		<div id="frequencies" class="container">
-			<span>Frequency: </span>
-			<button ng-repeat="freq in freqs" ng-click="chageFrequency(freq[1])" class="btn btn-xs">{% freq[0] %}</button>
+			<span class="tag">Frequency</span>
+			<ul>
+				<li ng-repeat="freq in freqs" ng-click="chageFrequency(freq[1])" ng-class="{'selected': frequency == freq[1]}">
+					{% freq[0] %}
+				</li>
+			</ul>
 		</div>
 	</div>
 	<div class="container main-container">

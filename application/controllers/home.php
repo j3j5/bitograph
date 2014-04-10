@@ -41,7 +41,8 @@ class Home_Controller extends Base_Controller {
 			$data = array(	'type' => 'line',
 				'options' => array(
 					'dual_axis' => FALSE,
-					'colors' => array('#2BBBD8', '#F78D3F')
+					'colors' => array('#2BBBD8', '#F78D3F'),
+					'frequency' => 60
 				),
 				'data' => array(
 					'metrics' => array('buy', 'sell'),
@@ -59,7 +60,8 @@ class Home_Controller extends Base_Controller {
 
 			$data = array(	'type' => 'line',
 				'options' => array(
-					'colors' => array('#2BBBD8')
+					'colors' => array('#2BBBD8'),
+					'frequency' => 60
 				),
 				'data' => array(
 					'metrics' => array('buy'),

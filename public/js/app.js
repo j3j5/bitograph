@@ -20,9 +20,22 @@ var accList = angular.module('AccountList', [])
 
 	$scope.state = StateProv.state;
 
+	var today = BCPT.view.parameters.endDate;
+	var dateFormat = 'YYYY-MM-DD';
 	$scope.data = {
-		markets:   ['bitonic', 'bitpay']
+		markets:   ['bitonic', 'bitpay'],
+		ranges: [
+			{label: 'today', start: today, end: today},
+			{label: 'last 2 days', start: moment(today).subtract('days', 1).format(dateFormat), end: today},
+			{label: 'last week', start: moment(today).subtract('days', 7).format(dateFormat), end: today},
+			{label: 'last month', start: moment(today).subtract('months', 1).format(dateFormat), end: today},
+		]
 	};
+
+	$scope.setDates = function (start, end) {
+		$scope.state.startDate = start;
+		$scope.state.endDate = end;
+	}
 
 })
 .controller('MainChartController', function($scope, StateProv, $http, $element) {
@@ -32,6 +45,10 @@ var accList = angular.module('AccountList', [])
 	$scope.$watchCollection('state', function (newVal, oldVal) {
 		$scope.fetchChartData();
 	});
+
+	$scope.frequency = ( !BCPT.view.chartData.options.hasOwnProperty('frequency') )
+		? 5 // 5 min
+		: BCPT.view.chartData.options.frequency;
 
 	$scope.chart = BCPTChart;
 
@@ -45,7 +62,7 @@ var accList = angular.module('AccountList', [])
 			parent: $chart,
 			boxSize: {'width': $chart.offsetWidth, 'height': 300},
 			tooltip: $element[0].querySelectorAll('.chart-tooltip')[0], //$chart.find('.chart-tooltip'),
-			chartOptions: BCPT.view.chartData.options
+			chartOptions: BCPT.view.chartData.options,
 		});
 	}
 
@@ -74,6 +91,7 @@ var accList = angular.module('AccountList', [])
 		['12 hr', 720], ['1 day', 1440], ['2 day', 2880]];
 
 	$scope.chageFrequency = function (freq) {
+		$scope.frequency = freq;
 		$scope.chart.changeChartFrequency(freq);
 	}
 

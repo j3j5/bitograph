@@ -1,5 +1,5 @@
 
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Lato:300,400,700,400italic);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Lato:300,400,700,300italic,400italic);
 // font-family: 'Droid Sans Mono', sans-serif;
 // font-family: 'Lato', sans-serif;
 
@@ -12,6 +12,16 @@ body {
     background-color: @bg-color-empty;
 }
 
+a, a:visited {
+	color: @blue;
+	.transition(all 250ms ease);
+
+	&:hover {
+		color: @orange;
+		.transition(none);
+	}
+}
+
 .light-text {
 	font-weight: 300;
 }
@@ -22,6 +32,10 @@ body {
 
 .ms-text { // monospace text
 	font-family: 'Droid Sans Mono', sans-serif;
+}
+
+header {
+	margin-bottom: 2px;
 }
 
 .main-container {
@@ -52,6 +66,95 @@ body {
 	}
 }
 
+#main-metrics {
+	height: 40px;
+	line-height: 40px;
+
+	.market-selector,
+	.dates-selector {
+		position: relative;
+		display: inline-block;
+
+		span.value {
+			display: inline-block;
+			font-size: 22px;
+			line-height: 26px;
+			font-style: italic;
+			font-weight: 300;
+			padding: 2px 10px 4px;
+			margin-right: 18px;
+			border: 1px solid transparent;
+			border-radius: 3px;
+			cursor: default;
+
+			span.small {
+				font-size: 18px;
+			}
+
+			&:hover {
+				background-color: lighten(@color-buy, 30%);
+				box-shadow: inset 0px 0px 8px -2px @color-buy;
+			}
+		}
+
+		ul.options {
+			display: none;
+			position: absolute;
+			top: 38px;
+			background-color: @bg-color-empty;
+			margin: 0px; padding: 0px; list-style: none; // TODO: reset ul, ol style
+			border: 1px solid @almostwhite;
+			line-height: 28px;
+			min-width: 120px;
+			box-shadow: 0px 0px 2px 2px @bg-color-empty;
+			z-index: 10000;
+
+			li {
+				padding: 0px 16px;
+
+				&.opt {
+					cursor: pointer;
+
+					&:hover {
+						background-color: lighten(@color-buy, 16%);
+					}
+				}
+			}
+		}
+
+		&.active {
+
+			ul.options {
+				display: block;
+			}
+		}
+
+	}
+
+	.dates-selector {
+		ul.options {
+			min-width: 330px;
+		}
+	}
+
+	&:hover {
+
+		.market-selector,
+		.dates-selector {
+
+			span.value {
+				border-color: @lightgrey;
+			}
+		}
+	}
+
+	span.tag {
+		font-size: 12px;
+		color: @midgrey;
+		text-transform: uppercase;
+	}
+}
+
 #chart-box {
 	padding-bottom: 20px;
 	margin-bottom: 20px;
@@ -59,6 +162,37 @@ body {
 
 #main-chart {
 	background-color: @bg-color;
+
+	#frequencies {
+		font-size: 12px;
+		padding: 4px 0px;
+
+		span.tag {
+			color: @midgrey;
+			text-transform: uppercase;
+		}
+
+		ul {
+			display: inline;
+			list-style: none;
+			margin: 0px;
+			padding: 0px;
+
+			li {
+				display: inline-block;
+				padding: 0px 4px;
+				cursor: pointer;
+
+				&:hover {
+					border-bottom: 2px solid @orange;
+				}
+
+				&.selected {
+					border-bottom: 2px solid @blue;
+				}
+			}
+		}
+	}
 }
 
 .chart {
