@@ -12,13 +12,11 @@
 <div id="header-net" style="position: absolute; top: 0px; right: 0px; height: 120px; width: 1200px;">
 </div>
 
-<header class="navbar navbar-static-top" role="banner">
-	<div class="navbar-header">
-		<a href="/" class="navbar-brand">
-			<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
-		</a>
-		<!-- a href="/login" style="float: right;">Login</a -->
-	</div>
+<header class="container">
+	<a href="/" class="brand">
+		<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
+	</a>
+	<!-- a href="/login" style="float: right;">Login</a -->
 </header>
 
 <section id="main" ng-app="AccountList" style="z-index: 1000; position: relative;">
