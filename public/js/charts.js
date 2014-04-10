@@ -28,11 +28,17 @@ var BCPTChart = {
 
 	init: function (options) {
 
-		this.chartType = options.chartType;
-		this.chartOptions = options.chartOptions;
-
 		this.baseFrequency = 5; // 5 min
-		this.chartOptions.frequency = 120; // 2 hr
+
+		this.chartOptions = { // Defaults
+			frequency: this.baseFrequency // 5 min
+		};
+
+		for (var attr in options.chartOptions) {
+			this.chartOptions[attr] = options.chartOptions[attr];
+		}
+
+		this.chartType = options.chartType;
 
 		this.parseData(options.data);
 		this.shownDataDeepCopy();
