@@ -41,6 +41,7 @@ var accList = angular.module('AccountList', [])
 .controller('MainChartController', function($scope, StateProv, $http, $element) {
 
 	$scope.state = StateProv.state;
+	$scope.isLoading = false;
 
 	$scope.$watchCollection('state', function (newVal, oldVal) {
 		$scope.fetchChartData();
@@ -67,6 +68,7 @@ var accList = angular.module('AccountList', [])
 	}
 
 	$scope.fetchChartData = function () {
+		$scope.isLoading = true;
 		$http({
 			url: BCPT.view.HOST + '/ajax/bitonic',
 			method: 'POST',
@@ -74,8 +76,10 @@ var accList = angular.module('AccountList', [])
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 		})
 		.success(function(response, status, headers, config) {
+			$scope.isLoading = false;
 			$scope.updateChart(response);
 		}).error(function(data, status, headers, config) {
+			$scope.isLoading = false;
 			console.log('error');
 		});
 	}

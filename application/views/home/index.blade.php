@@ -73,6 +73,9 @@
 				</li>
 			</ul>
 		</div>
+		<div class="loading-mask" ng-show="isLoading">
+			<span>Loading</span>
+		</div>
 	</div>
 	<div class="container main-container">
 		<div ng-controller="ConverterController" class="col-sm-6 col-md-6">
