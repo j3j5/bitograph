@@ -2,6 +2,9 @@
 <html>
 <head>
 	<title>Bitcoin Price TODAY!</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
 	{{ Asset::container('head')->styles() }}
 	@include('partials.analytics')
 </head>
