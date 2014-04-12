@@ -44,6 +44,7 @@ var accList = angular.module('AccountList', [])
 	$scope.isLoading = false;
 
 	$scope.$watchCollection('state', function (newVal, oldVal) {
+		if ( newVal == oldVal ) { return; } // No changes no fetching
 		$scope.fetchChartData();
 	});
 
