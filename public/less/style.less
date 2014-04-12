@@ -44,6 +44,11 @@ header {
 	}
 }
 
+section.main {
+	position: relative;
+	z-index: 1000;
+}
+
 .main-container {
 	background-color: @bg-color;
 	margin-top: 20px;
@@ -54,6 +59,11 @@ header {
 }
 
 #header-net {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	height: 120px;
+	width: 1200px;
 
 	svg {
 		background-color: @bg-color-empty;
@@ -162,6 +172,7 @@ header {
 }
 
 #main-chart {
+	position: relative;
 	background-color: @bg-color;
 
 	#frequencies {

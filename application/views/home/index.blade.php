@@ -8,17 +8,17 @@
 
 <body>
 
-<div id="header-net" style="position: absolute; top: 0px; right: 0px; height: 120px; width: 1200px;">
+<div id="header-net">
 </div>
 
 <header class="container">
 	<a href="/" class="brand">
 		<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
 	</a>
-	<!-- a href="/login" style="float: right;">Login</a -->
+	<!-- a href="/login" class="pull-right">Login</a -->
 </header>
 
-<section id="main" ng-app="AccountList" style="z-index: 1000; position: relative;">
+<section ng-app="AccountList" class="main">
 	<div ng-controller="MetricsController" id="main-metrics" class="container">
 		<span class="tag">Market</span>
 		<div class="market-selector" ng-init="marketActive=false;"
