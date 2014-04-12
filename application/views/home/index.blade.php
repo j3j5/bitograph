@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>Bitcoin Price TODAY!</title>
-	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
 	{{ Asset::container('head')->styles() }}
 	@include('partials.analytics')
 </head>
