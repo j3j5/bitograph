@@ -12,6 +12,10 @@ body {
     background-color: @bg-color-empty;
 }
 
+[ng-cloak], [data-ng-cloak], .ng-cloak {
+	display: none !important;
+}
+
 a, a:visited {
 	color: @blue;
 	.transition(all 250ms ease);

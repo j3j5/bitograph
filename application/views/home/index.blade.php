@@ -22,7 +22,7 @@
 </header>
 
 <section ng-app="AccountList" class="main">
-	<div ng-controller="MetricsController" id="main-metrics" class="container">
+	<div ng-controller="MetricsController" ng-cloak id="main-metrics" class="container">
 		<span class="tag">Market</span>
 		<div class="market-selector" ng-init="marketActive=false;"
 			ng-mouseenter="marketActive=true;" ng-mouseleave="marketActive=false;" ng-class="{'active': marketActive}">
@@ -71,7 +71,7 @@
 		<div id="frequencies" class="container">
 			<span class="tag">Frequency</span>
 			<ul>
-				<li ng-repeat="freq in freqs" ng-click="chageFrequency(freq[1])" ng-class="{'selected': frequency == freq[1]}">
+				<li ng-repeat="freq in freqs" ng-cloak ng-click="chageFrequency(freq[1])" ng-class="{'selected': frequency == freq[1]}">
 					{% freq[0] %}
 				</li>
 			</ul>
@@ -81,7 +81,7 @@
 		</div>
 	</div>
 	<div class="container main-container">
-		<div ng-controller="ConverterController" class="col-sm-6 col-md-6">
+		<div ng-controller="ConverterController" ng-cloak class="col-sm-6 col-md-6">
 			<div id="converter">
 				<h3 class="light-text">On <span>{% lastValue.datetime | date:'EEE, MMM dd, HH:mm' %}</span></h3>
 				<div class="unity-values row">

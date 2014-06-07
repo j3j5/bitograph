@@ -247,6 +247,7 @@ textarea.input-group-sm>.form-control,textarea.input-group-sm>.input-group-addon
 .visible-print{display:none !important}@media print{.visible-print{display:block !important}table.visible-print{display:table} tr.visible-print{display:table-row !important} th.visible-print,td.visible-print{display:table-cell !important}}
 @media print{.hidden-print{display:none !important}}
 body{font-family:'Lato',sans-serif;background-color:#f6f6f6}
+[ng-cloak],[data-ng-cloak],.ng-cloak{display:none !important}
 a,a:visited{color:#2bbbd8;transition:all 250ms ease;-webkit-transition:all 250ms ease;-moz-transition:all 250ms ease;-ms-transition:all 250ms ease;-o-transition:all 250ms ease}a:hover,a:visited:hover{color:#f78d3f;transition:none;-webkit-transition:none;-moz-transition:none;-ms-transition:none;-o-transition:none}
 .light-text{font-weight:300}
 .bold-text{font-weight:700}
