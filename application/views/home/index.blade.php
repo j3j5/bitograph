@@ -9,7 +9,7 @@
 	@include('partials.analytics')
 </head>
 
-<body>
+<body ng-app="AccountList">
 
 <div id="header-net">
 </div>
@@ -19,9 +19,13 @@
 		<span class="bold-text">BITCOIN</span><span class="light-text">PRICE</span>TODAY!
 	</a>
 	<!-- a href="/login" class="pull-right">Login</a -->
+	<div ng-controller="TimerController" class="main-timer" ng-click="update()" ng-class="{on: canBeUpdated()}">
+		<span class="grey">last update</span> <span ng-cloak>{% convertMinutes() %}</span> <span class="grey">ago</span>
+		<span class="glyphicon glyphicon-refresh refresh"></span>
+	</div>
 </header>
 
-<section ng-app="AccountList" class="main">
+<section class="main">
 	<div ng-controller="MetricsController" ng-cloak id="main-metrics" class="container">
 		<span class="tag">Market</span>
 		<div class="market-selector" ng-init="marketActive=false;"

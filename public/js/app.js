@@ -9,11 +9,13 @@ var accList = angular.module('AccountList', [])
 		endDate:     BCPT.view.parameters.endDate,
 		minDateData: BCPT.view.parameters.calendarMinDate,
 		maxDateData: BCPT.view.parameters.calendarMaxDate,
-		market:      BCPT.view.parameters.market
+		market:      BCPT.view.parameters.market,
+		updates:     0
 	};
 
 	return {
 		state: state,
+		forceUpdate: function () { this.state.updates++; }
 	};
 })
 .controller('MetricsController', function($scope, StateProv) {
@@ -35,6 +37,36 @@ var accList = angular.module('AccountList', [])
 	$scope.setDates = function (start, end) {
 		$scope.state.startDate = start;
 		$scope.state.endDate = end;
+	}
+
+})
+.controller('TimerController', function($scope, StateProv, $interval) {
+
+	$scope.counter = 0;
+
+	stop = $interval(function() {
+		$scope.counter++;
+	}, 60 * 1000);
+
+	$scope.convertMinutes = function () {
+		if ( $scope.counter >= 60 ) {
+			return parseInt( $scope.counter / 60 ) + ' hr';
+		}
+		else {
+			return $scope.counter % 60 + ' min';
+		}
+	}
+
+	$scope.canBeUpdated = function () {
+		return $scope.counter > 4;
+	}
+
+	$scope.update = function () {
+
+		if ( !$scope.canBeUpdated() ) { return; }
+
+		StateProv.forceUpdate();
+		$scope.counter = 0;
 	}
 
 })

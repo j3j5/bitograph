@@ -46,6 +46,48 @@ header {
 		font-size: 32px;
 		text-decoration: none;
 	}
+
+	.main-timer {
+		position: absolute;
+		top: 2px;
+		right: 0px;
+		padding: 2px 6px;
+		background-color: rgba(255, 255, 255, 0.8);
+		line-height: 24px;
+		cursor: default;
+		.border-radius(4px);
+		.no-select();
+
+		span.refresh {
+			top: 4px;
+			font-size: 18px;
+			color: @lightgrey;
+			margin-left: 4px;
+		}
+
+		&.on {
+
+			span.refresh {
+				color: @blue;
+				.transition(all 250ms ease);
+			}
+
+			&:hover {
+				box-shadow: inset 0px 0px 8px -2px @darkgrey;
+				cursor: pointer;
+
+				span.refresh {
+					color: @orange;
+				}
+			}
+
+		}
+
+		span.grey {
+			color: @lightgrey;
+			font-weight: 300;
+		}
+	}
 }
 
 section.main {
@@ -125,7 +167,7 @@ section.main {
 			z-index: 10000;
 
 			li {
-				padding: 0px 16px;
+				padding: 4px 16px;
 
 				&.opt {
 					cursor: pointer;
