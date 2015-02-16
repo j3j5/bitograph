@@ -79,7 +79,7 @@ return array(
 	|
 	*/
 
-	'cookie' => 'laravel_session',
+	'cookie' => 'btptoday_session',
 
 	/*
 	|--------------------------------------------------------------------------
