@@ -1,0 +1,28 @@
+/* 
+	http://bitcoinprice.today
+	Your place to check the price of final users markets.
+*/
+
+/* TEAM */
+
+	Backend: 
+		Julio J.
+		@julielpoeta
+		Amsterdam
+
+	Frontend: 
+		Javier Negre Gallén
+		@javi_negre
+		Amsterdam
+		http://javiscript.me
+
+*/
+
+/* THANKS */
+	Bitonic and Bitpay for providing wonderful BTC services.
+
+/* SITE */
+	Last update: 2014/07/10
+	Standards: HTML5, CSS3, JS
+	Components: AngularJS
+	Software: LAMP + Laravel
