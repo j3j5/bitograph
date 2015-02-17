@@ -56,7 +56,7 @@ class Ajax_Controller extends Base_Controller {
 			);
 		}
 
-		return json_encode($data);
+		return Response::json($data);
 	}
 
 }
