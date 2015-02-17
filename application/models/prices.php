@@ -75,6 +75,38 @@ class Prices {
 		return $range_prices;
 	}
 
+	/**
+	 *
+	 * example: $old_prices = array(time()-233 => array('buy' => 40055, 'sell' => 52322));
+	 * 			$new_prices = array('buy' => 500.25, 'sell' => 400.23, 'timestamp' => time())
+	 *
+	 */
+	public static function update_prices($market, $new_prices) {
+		$supported_markets = Config::get('application.supported_markets');
+
+		if( !is_string($market) OR !in_array($market, $supported_markets) ) {
+			return FALSE;
+		}
+
+		if( !is_array($new_prices)) {
+			var_dump($new_prices);
+			return FALSE;
+		}
+		elseif(!isset($new_prices['buy'], $new_prices['sell'], $new_prices['timestamp'])){
+			var_dump($new_prices);
+			return FALSE;
+		}
+
+		$prices = self::get_uncompressed_blob($new_prices['timestamp'], FALSE, $market);
+
+		// Convert prices to cents so we can store it on a long
+		$prices[$new_prices['timestamp']]['buy'] = $new_prices['buy'] * 100;
+		$prices[$new_prices['timestamp']]['sell'] = $new_prices['sell'] * 100;
+		krsort($prices);
+
+		return self::set_compressed_blob($market, $prices, $new_prices['timestamp']);
+	}
+
 	private static function get_blobs($market, $start_ts, $end_ts) {
 		if(empty($market) OR !is_string($market)) {
 			return FALSE;
@@ -117,68 +149,13 @@ class Prices {
 		$last_month = new DateTime("@{$end_ts}");
 		// Make the current date the beginning of the first month
 		$current_date = new DateTime(date("Y-m-", $start_ts) . "01");
-		$current_date->setTimestamp();
+// 		$current_date->setTimestamp($start_ts);
 		while($current_date->getTimestamp() <= $last_month->getTimestamp()) {
 			$tables[] = self::$blob_table_prefix . $current_date->format(self::$blob_table_format);
 			$current_date->setTimestamp(strtotime("+1 month", $current_date->getTimestamp()));
 		}
 		return $tables;
 	}
-
-
-	private static function uncompress_blob($blob) {
-		$bytes = unpack("V*", gzinflate($blob));
-
-		$prices = array();
-		$i = 0;
-		// Build the array and undo the cent conversion
-		foreach ($bytes as $v) {
-			if ($i%3 == 0) {
-				$k = $v;
-			} elseif($i%3 == 1) {
-				$prices[$k]['buy'] = $v;
-// 			} elseif($i%3 == 2)
-			} else {
-				$prices[$k]['sell'] = $v;
-			}
-			$i++;
-		}
-		return $prices;
-
-	}
-
-	/**
-	 *
-	 * example: $old_prices = array(time()-233 => array('buy' => 40055, 'sell' => 52322));
-	 * 			$new_prices = array('buy' => 500.25, 'sell' => 400.23, 'timestamp' => time())
-	 *
-	 */
-	public static function update_prices($market, $new_prices) {
-		$supported_markets = Config::get('application.supported_markets');
-
-		if( !is_string($market) OR !in_array($market, $supported_markets) ) {
-			return FALSE;
-		}
-
-		if( !is_array($new_prices)) {
-			var_dump($new_prices);
-			return FALSE;
-		}
-		elseif(!isset($new_prices['buy'], $new_prices['sell'], $new_prices['timestamp'])){
-			var_dump($new_prices);
-			return FALSE;
-		}
-
-		$prices = self::get_uncompressed_blob($new_prices['timestamp'], FALSE, $market);
-
-		// Convert prices to cents so we can store it on a long
-		$prices[$new_prices['timestamp']]['buy'] = $new_prices['buy'] * 100;
-		$prices[$new_prices['timestamp']]['sell'] = $new_prices['sell'] * 100;
-		krsort($prices);
-
-		return self::set_compressed_blob($market, $prices, $new_prices['timestamp']);
-	}
-
 
 	private static function set_compressed_blob($market, $prices, $timestamp) {
 		$supported_markets = Config::get('application.supported_markets');
@@ -203,6 +180,27 @@ class Prices {
 			"`updated_at` = NOW()",
 			$bindings
 		);
+	}
+
+	private static function uncompress_blob($blob) {
+		$bytes = unpack("V*", gzinflate($blob));
+
+		$prices = array();
+		$i = 0;
+		// Build the array and undo the cent conversion
+		foreach ($bytes as $v) {
+			if ($i%3 == 0) {
+				$k = $v;
+			} elseif($i%3 == 1) {
+				$prices[$k]['buy'] = $v;
+				// 			} elseif($i%3 == 2)
+			} else {
+				$prices[$k]['sell'] = $v;
+			}
+			$i++;
+		}
+		return $prices;
+
 	}
 
 	private static function compress_prices($prices) {
