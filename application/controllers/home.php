@@ -20,7 +20,7 @@ class Home_Controller extends Base_Controller {
 
 		$today = date('Y-m-d');
 		$view_params = array(
-			'startDate'       => date('Y-m-d', strtotime('-5days')),
+			'startDate'       => date('Y-m-d', strtotime('-5 days')),
 			'endDate'         => $today,
 			'calendarMinDate' => '2014-01-29',
 			'calendarMaxDate' => $today,

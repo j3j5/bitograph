@@ -28,15 +28,11 @@ class Prices {
 			return FALSE;
 		}
 
-		$i = 0;
+		$blob_results = array();
 		foreach($blobs AS $blob) {
 			$blob = self::uncompress_blob( $blob );
 			if(is_array($blob)) {
-				if($i == 0) {
-					$blob_results = $blob;
-				} else {
-					$blob_results = array_merge($blob_results, $blob);
-				}
+				$blob_results = $blob_results + $blob;	// The + operator on the array will keep numeric keys
 			}
 		}
 
@@ -47,6 +43,9 @@ class Prices {
 				$blob_results[$ts]['sell'] = $prices['sell']/100;
 			}
 		}
+
+		krsort($blob_results);
+
 		return $blob_results;
 	}
 
